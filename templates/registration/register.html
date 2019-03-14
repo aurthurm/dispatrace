@@ -1,0 +1,47 @@
+{% extends 'superior.html' %}
+
+{% block content %}
+
+      <div class="container">
+      <div class="row ">
+      <div class="col-12 text-center my-5"  style="padding: 42px 35px;  background: rgba(171, 119, 157, 0.27);">          
+          <div class="card-text p-2 mb-5 bg-light">
+            <h4>DISPATRACE Registration</h4>
+          </div>
+          {% if messages %}
+          <ul>
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+          </ul>
+        {% endif %}
+      
+        <form method="post">
+            {% csrf_token %}
+            {% for field in registration_form %}
+            <div class="form-group row">
+                <label for="staticEmail" class="col-3 col-form-label">{{ field.label_tag }}</label>
+                <div class="col-8">
+                    {{ field }}
+                    {% if field.help_text %}
+                    <!-- <small style="color: grey">{{ field.help_text }}</small> -->
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger" role="alert">                            
+                            <p>{{ error }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="form-group row">
+                <div class="col-2 offset-8">
+                    <button type="submit" class="btn btn-md btn-primary">Sign Up</button>
+                </div>
+            </div>
+        </form>  
+        </div>
+      </div>
+      </div>      
+
+{% endblock %}

@@ -1,0 +1,71 @@
+<table class="table" ui-jq="footable" ui-options='{
+    "paging": {
+    "enabled": true
+    },
+    "filtering": {
+    "enabled": true
+    },
+    "sorting": {
+    "enabled": true
+    }}'>
+    <thead>
+        {% if user.user_profile.has_admin_access %}
+            <tr>
+                <span>
+                    <a class="text-dark btn btn-outline-info" href="{% url 'profiles:office-add' %}">ADD Office/Branch <span><i class="fa fa-plus"></i></span></a>
+                </span>
+            </tr>
+        {% endif %}
+        <tr>
+            <th class="text-white">Country</th>    
+            <th class="text-white">City</th>
+            <th class="text-white">Office / Branch</th>
+            <th class="text-white">Code</th>
+            {% if user.user_profile.has_admin_access %}
+                <th class="text-white">EDIT</th>
+            {% endif %}
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for office in offices %}
+            <tr>
+                <td class="text-white">{{ office.city.country.name }}</td>
+                <td class="text-white">{{ office.city.name }}</td>
+                <td class="text-white">{{ office.name }}</td>
+                <td class="text-white">{{ office.code }}</td>
+                {% if user.user_profile.has_admin_access %}
+                    <td>
+                        <a class="text-danger" href="{% url 'profiles:office-edit' office_id=office.pk %}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% empty %}
+            <tr>
+                <td class="text-white">You have no offices registered yet</td>
+                <td></td>
+                <td></td>
+                <th></th>
+                <th></th>
+            </tr>            
+        {% endfor %}
+    </tbody>
+</table>    
+
+{% if offices.has_other_pages %}
+  <ul class="pagination">
+    {% if offices.has_previous %}
+      <li><a href="?page={{ offices.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+
+    {% if offices.has_next %}
+      <li><a href="?page={{ offices.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}

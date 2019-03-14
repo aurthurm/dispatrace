@@ -1,0 +1,33 @@
+<form id='fuelRequestFormm' class="bg-info ml-2 mr-4 p-4" method='POST' action='{% url "memoir:request-fuel" memo_id=memo.pk memo_slug=memo.slug %}'>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-3 form-group">
+            <label for="amount">Amount in Litres</label>
+            <input type="text" class="form-control" id="amount" placeholder="Amount in Litres">
+        </div>
+        <div class="col-3 form-group">
+            <label for="priority">Priority</label>
+            <select class="form-control" id="priority">
+                <option>Normal</option>
+                <option>High</option>
+            </select>
+        </div>
+        <div class="col-3 form-group">
+            <label for="fuel_type">Fuel type</label>
+            <select class="form-control" id="fuel_type">
+                <option>Petrol</option>
+                <option>Diesel</option>
+            </select>
+        </div>
+    </div>
+    <hr>
+    <div class="row my-3">
+        <div class="col-4 offset-3 form-group">
+            <label for="password_confirm" >Enter Password</label>
+            <input type="password" class="form-control" id="password_confirm" placeholder="Password">
+        </div>
+        <div class="col-2">
+            <button type="submit" class="btn btn-success mt-4">Add Fuel request</button>
+        </div>
+    </div>
+</form>

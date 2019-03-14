@@ -1,0 +1,102 @@
+{% extends 'superior.html' %}
+{% load static %}
+
+{% block styles %}
+<style>
+  #main-content {
+    margin-left:  0px;
+  }
+
+  #feather,
+  #feather3  {
+      max-width: 100px;
+      position: absolute;
+      bottom: 100px;
+  }
+  #feather {
+    right: 75px;
+  }
+  #feather3 {
+      left: 75px;        
+      -moz-transform: scaleX(-1);
+      -o-transform: scaleX(-1);
+      -webkit-transform: scaleX(-1);
+      transform: scaleX(-1);
+      filter: FlipH;
+      -ms-filter: "FlipH";
+    }
+  #feather2 {
+    max-width: 100px;
+    position: relative;
+    top: -85px;
+    left: -25%;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+      <div class="container">
+
+        <h2 class="card-title h1 text-center mb-2">Welcome to <b>DISPATRACE</b>
+          <img src="{% static 'dispatrace/img/feather-line.png' %}" alt="" id="feather2">
+        </h2>
+        <img src="{% static 'dispatrace/img/feather-pen.png' %}" alt="" id="feather">
+        <img src="{% static 'dispatrace/img/feather-pen.png' %}" alt="" id="feather3">
+        <div class="row">
+          <div class="col-8 offset-2">
+        <div id="homeCard" class="row log-w3" style="padding: 42px 35px;">
+          <div class="col-6" style="background: rgba(171, 119, 157, 0.27);">          
+            <div class="card-text pt-4 mb-3">
+              <h3>LOGIN  TO ACCESS</h3>
+            </div>
+
+                <form id="loginForm" action="{% url 'login' %}" class="form-horizontal text-center" method = "post">              
+                  {% csrf_token %}
+                  <div class="form-group row">
+                    <label for="id_username" class="col-sm-3 col-form-label">{{ form.username.label_tag }}</label>
+                    <div class="col-sm-8 offset-1">
+                        {{ form.username }}
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="id_Password" class="col-sm-3 col-form-label">{{ form.password.label_tag }}</label>
+                    <div class="col-sm-8 offset-1">
+                        {{ form.password }}
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      <div class="col-sm-3 offset-4">
+                          <input class = "btn btn-primary" type="submit" value="login" />
+                          <input type="hidden" name="next" value="/" />
+                      </div>
+                  </div>
+              </form>
+          </div>
+          <div class="col-6 bg-white">
+            <div class="card-text p-5">
+              <h4 class="card-title h1"><b>SMART VIRTUAL WORK SYSTEM</b></h4>
+              <hr>
+              <ol>
+                <li>e-Memorandums</li>
+                <li>e-Fuel requests</li>
+                <li>e-Notices</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+            
+          </div>
+        </div>
+      </div>     
+      
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" >
+        $(document).ready(function() {
+            $('#id_username').addClass("form-control").val('');
+            $('#id_password').addClass("form-control").val('');
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,345 @@
+
+/* General styes
+-------------------------------------------------- */
+#container.outer-most {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+#main-content{
+  flex: 1;
+}
+
+.card-text ol {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    margin-left: -20px;
+}
+
+.bg-none {
+  background: transparent!important;
+  border: none!important;
+  font-weight: 900;
+}
+
+.
+/* font sizes
+-------------------------------------------------- */
+body {
+  font-size: 100% !important;
+  line-height: 1.25;
+}
+
+h4,
+.h4,
+.post-body,
+.comment-message,
+li.username {
+  font-size: 1em !important;
+}
+
+img#logo {
+  max-width: 70px;
+  margin-top: -25px;
+}
+#sidebar .sub-menu>.sub li a span {
+    margin-top: -10px !important;
+}
+ul.sidebar-menu li a span {
+    font-size: 1em;
+}
+.bg-green,
+ul.sidebar-menu li ul.sub li {
+    background: green;
+}
+ul.sidebar-menu ul.sub li {
+    border-bottom: 1px solid olivedrab;
+}
+
+#sidebar .sub-menu>.sub li a {
+    font-size: 0.715em;
+    text-transform: uppercase;
+}
+
+a.logo {
+  font-size: 1.5rem;
+}
+
+.corner-ribbon {
+  font-size: 0.5em;
+}
+
+.brand,
+#sidebar {
+  width: 200px;
+}
+
+.brand{
+  background: #3cba92;
+}
+
+.footer {
+  background: rgba(0, 0, 0, 1.0);
+}
+
+#homeCard{
+  padding: 0 !important;
+  -webkit-box-shadow: 1px 2px 6px 0px rgba(0,0,0,1)!important;
+  -moz-box-shadow: 1px 2px 6px 0px rgba(0,0,0,1)!important;
+  box-shadow: 1px 2px 6px 0px rgba(0,0,0,1) !important;
+}
+
+ .footer p {
+  margin-bottom: 0;
+  font-size: 0.725em;
+ }
+
+.sidebar-toggle-box,
+#sidebar,
+#topNavBar {
+    background: rgb(3, 78, 39);
+  }
+
+.header {
+    background: #0ba360;
+}
+
+li.username i {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+/* memos: ribbon
+-------------------------------------------------- */
+.memo-listing {
+  position: relative;
+  overflow: hidden;
+  padding: 1px 1px 0 0;
+  margin: 0; }
+
+.corner-ribbon {
+  width: 200px;
+  position: absolute;
+  font-family: 'PT Sans', sans-serif;
+  text-align: center;
+  line-height: 30px;
+  letter-spacing: 1px;
+  color: #f0f0f0;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  z-index: 1; }
+
+.corner-ribbon.shadow {
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); }
+
+.corner-ribbon.top-right {
+  top: 14px;
+  right: -70px;
+  left: auto;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg); }
+
+.corner-ribbon.green {
+  background: #286D13; }
+
+.corner-ribbon.black {
+  background: #0D0D0D; }
+
+.corner-ribbon.blue {
+    background: blue;}
+
+/* memos: recipient image
+-------------------------------------------------- */
+img.recipient-image {
+  width: 50px;
+  height: 40px; }
+
+/* media: comment image
+-------------------------------------------------- */
+img.user-comment-img {
+  width: 100px; }
+
+/* create memo pointer
+-------------------------------------------------- */
+  #pointer {
+  width: 400px;
+  height: 40px;
+  position: relative;
+  background: #286D13; }
+
+#pointer:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid #0D0D0D;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent; }
+
+#pointer:before {
+  content: "";
+  position: absolute;
+  right: -20px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid #286D13;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent; }
+
+
+.pagination li.page-item {
+    margin: 0 5px;
+}
+
+.pagination li a,
+.pagination li span {
+  padding: 5px 10px;
+  border: 1px solid gray;
+  border-radius: 99999px
+}
+
+.pagination li a:hover {
+  background-color:  rgba(0,0,0,.1);
+}
+
+.pagination li span {
+  background-color:  blue;
+}
+
+/* configs listing
+-------------------------------------------------- */
+div#nav-tabContent {
+    background-color: rgba(0,0,0,.2);
+    padding: 15px;
+}
+
+/* configs listing
+-------------------------------------------------- */
+#ui-datepicker-div {
+    background:  #D3D3D3;
+    color: #fff;
+    padding: 5px;
+}
+
+.ui-datepicker-next {
+    float: right;
+}
+
+.ui-datepicker-calendar thead th:not(:last-of-type):after {
+    content: " | ";
+}
+
+ul.ui-autocomplete {
+    max-width: 20% !important;
+    margin-left: 300px !important;
+    margin-top: 150px !important;
+}
+.badge-success{
+  border-color: green !important;
+}
+.p-urgent {
+    border-top: 5px solid red;
+}
+.p-normal {
+    border-top: 5px solid gray;
+}
+.p-moderate {
+    border-top: 5px solid orange;
+}
+tr.p-normal,
+tr.p-urgent,
+tr.p-moderate,
+.card.notice {
+    border-top: 0;
+    border-radius: 0px;
+}
+tr.p-urgent,
+.notice.p-urgent {
+    border: none !important;
+    border-left: 5px solid red !important;
+}
+tr.p-normal,
+.notice.p-normal,
+.p-normal.aside {
+    border: none !important;
+    border-left: 5px solid gray !important;
+}
+tr.p-moderate,
+.notice.p-moderate,
+.p-moderate.aside {
+    border: none !important;
+    border-left: 5px solid orange !important;
+}
+.card.notice.p-normal,
+.p-normal.aside {
+    border: none !important;
+    border-left: 5px solid grey !important;
+    border-radius: 0px;
+}
+
+ .board-color {
+    background-color: #F4976C !important;
+}
+
+ .listing-color {
+    background-color: #FBE8A6 !important;
+}
+
+.team-color {
+    background-color: #f59842 !important;
+}
+
+.section-color {
+    background-color: #84d69d !important;
+}
+
+.item-color {
+    background-color: #303C6C !important;
+    /* opacity: 0.8; */
+    padding-left: 0.5%;
+}
+/* 
+    ::::::::::::::::::::::::: Cards
+*/
+.card-text .cardTextMore {
+    float: right;
+ }
+
+ .badge-sm {
+    font-size: 0.8275em !important;
+}
+
+ul.sidebar-menu li.sub-menu {
+    line-height: 0px;
+}
+
+.ui-icon {
+    text-indent: 0px !important;
+    padding:  2px !important;
+    margin-top: .25em !important;
+}
+
+ul.top-menu > li > a {
+  padding: 8px 10px;
+  border-radius: 5px;
+  background: #3cba92;
+}
+
+ul.top-menu > li:hover > a {
+  border-radius: 2px !important;
+  background: #5ebc62 !important;
+}
+
+.dropdown-menu.extended {
+    max-width: 820px !important;
+    min-width: 460px !important;
+    width: 600px !important;
+}
+
+.badge.badge-2{
+  top:  10px !important;
+}

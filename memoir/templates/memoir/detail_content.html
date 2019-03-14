@@ -1,0 +1,224 @@
+{% load memo_tags_filters %}
+		<div class="row">
+			<div class="col-12">
+				<h2>MEMORANDUM</h2>
+				<div class="memo-detail mb-5">
+					<div class="card {% memo_urgency memo=memo %} aside">
+
+						{% include "memoir/memo_detail_header.html" %}
+
+						<div class="addRecipient my-3 ml-3" style="display:none">
+
+							{% include "memoir/add_recipient_form.html" %}
+							<hr>
+
+						</div>
+                        
+						<div class="alert alert-danger p-2 m-2 usernotfound" role="alert" style="display: none;">
+							A user with that username was not found
+						</div>	
+						<table class="table table-hover table-dark">
+							<tbody>
+								<tr>
+									<th scope="row">MEMO BODY</th>
+								</tr>
+							</tbody>
+						</table>
+						<div class="card-text pl-4 pt-2 pr-4 pb-4">
+							{{memo.message|safe}}
+						</div>
+						{% if memo.commenting_required %}
+							<table class="table table-hover table-dark">
+								<tbody>
+									<tr>
+									<th scope="row">COMMENTS 
+										{% if reveal_comment_message and not has_commented and not memo.sender == request.user or memo.sender == request.user %}
+											<small class="lead ml-5 bg-white text-danger p-1">You cannot comment (yet).</small>
+										{% endif %}
+									</th>
+									<td>
+										<span class="float-right">
+											<i class="fa fa-comments"></i>
+											<span class="badge badge-info ml-1 mr-5">{{ comments|length }}/{{ memo.recipients.all.count|add:"1" }}</span>
+											<span class="revealComment bg-white p-1 text-dark mr-2" style="{{ reveal_comment_css }}">
+												ADD COMMENT <i class="fa fa-plus-square mr-2"></i></span>
+										</span>
+									</td>
+									</tr>
+									</tbody>
+							</table>
+							<div class="card-body">
+								<div class="card-text">
+									<div class="memoCommentForm" style="display: none;">	
+
+										{% include "memoir/add_comment_form.html" %}
+
+										<div class="messages p-2 text-white mt-2"></div>
+									</div>
+									<hr>
+									<ul class="list-unstyled">
+
+										{% include "memoir/comments.html" %}
+										
+									</ul>
+								</div>
+							</div>
+						{% endif %}
+					</div>	
+				</div>		
+			</div>
+		</div>
+		{% if memo.commenting_required %}
+			{% can_close_after_commenting memo=memo as allowed_to_close %}
+			{% if can_close and memo.is_open and allowed_to_close %}
+				<button id="memo-close" class="btn btn-danger btn-block btn-large my-1" close-url="{% url 'memoir:memo-close' memo_id=memo.pk memo_slug=memo.slug %}">
+					Close Memo
+				</button>
+				<div class="messages p-2 text-white mt-2 text-center"></div>
+			{% endif %}
+		{% else %}
+			{% can_recept_memo memo=memo user=user as allowed_to_recept %}
+			{% if memo.is_open and allowed_to_recept %}
+				<button id="memo-acknowledge-reception" class="btn btn-danger btn-block btn-large my-1" recept-url="{% url 'memoir:memo-recept' memo_id=memo.pk memo_slug=memo.slug %}">
+					Acknowledge Memo Reception
+				</button>
+				<div class="messages p-2 text-white mt-2 text-center"></div>
+			{% endif %}
+		{% endif %}
+
+		{% if not memo.is_open and not memo.archived and memo.sender == user %}
+			<button id="memo-archive" class="btn btn-danger btn-block btn-large my-1" archive-url="{% url 'memoir:memo-archive' memo_id=memo.pk memo_slug=memo.slug %}">
+				Archive Memo
+			</button>
+			<div class="messages p-2 text-white mt-2 text-center"></div>
+		{% endif %}
+
+		{% if user == memo.sender and not memo.sent %}		
+	        {% memo_can_be_sent memo=memo as memo_cbs %}
+	        {% if memo_cbs %}
+			{% include "memoir/send_form.html" %}
+				<div class="messages p-2 text-white mt-2 text-center"></div>
+			{% endif %}
+		{% endif %}
+
+		<!-- Audit Trail Modal -->
+
+		<!-- Button trigger modal -->
+   	{% if request.user|has_group:"Auditors" %}
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+				View Audit Trail
+			</button>
+		{% endif %}
+
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalCenterTitle">Trail Logs</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+				<table  class="table table-borderless">
+				    <thead>
+				        <tr>
+				        <!--     <th scope="col">Memo ID</th>
+				            <th scope="col">History Date/Time</th>
+				            <th scope="col">History Action</th>
+				            <th scope="col">History User</th> -->
+				            <th></th>
+				        </tr>
+				    </thead>
+				    <tbody>
+<!-- 				        {% for trail in history %}
+					        <tr>
+					            <td>[MEMO] {{ trail.id }}</td>
+					            <td>{{ trail.history_date }}</td>
+					            <td>{{ trail.get_history_type_display }}</td>
+					            <td>{{ trail.history_user }}</td>
+					        </tr>
+				        {% empty %}
+					        <tr>
+	        					<td colspan="4">Memo {{ memo.reference_number }} instance has no versions yet</td>
+					        </tr>
+				        {% endfor %} -->
+
+<!-- 						{% for fuel in memo.fuel_request.all %}
+					        {% with fuel_history=fuel.history.all  %}
+						        {% if fuel_history.count != 0 %}
+									{% for f_trail in fuel_history %}
+								        <tr>
+								            <td>[FUEL] {{ f_trail.id }}</td>
+								            <td>{{ f_trail.history_date }}</td>
+								            <td>{{ f_trail.get_history_type_display }}</td>
+								            <td>{{ f_trail.history_user }}</td>
+								        </tr>
+							        {% empty %}
+								        <tr>
+				        					<td colspan="4">Fuel {{ fuel.pk }} instance has no versions yet</td>
+								        </tr>										        	
+							        {% endfor %}
+							    {% endif %}
+					        {% endwith %}
+				        {% endfor %} -->
+
+						{% for c_trail in memo_trails %}
+					        <tr>				        	
+					            <td {% if c_trail.id == c_trail.object_id %} class="text-success" {% else %} class="text-danger" {% endif %}">	
+						            [MEMO] {{ c_trail.object_id }} | 
+						            [TRAIL] {{ c_trail.id }} | 
+						            {{ c_trail }} | 
+						            {{ c_trail.revision.date_created }} | 
+						            {{ c_trail.revision.user }}
+					        	</td>
+					        </tr>
+				        {% endfor %}
+
+						{% for c_trail in attachment_trails %}
+					        <tr>				        	
+					            <td {% if c_trail.id == c_trail.object_id %} class="text-success" {% else %} class="text-danger" {% endif %}">	
+						            [ATTACHMENT] {{ c_trail.object_id }} | 
+						            [TRAIL] {{ c_trail.id }} | 
+						            {{ c_trail }} | 
+						            {{ c_trail.revision.date_created }} | 
+						            {{ c_trail.revision.user }}
+					        	</td>
+					        </tr>
+				        {% endfor %}
+
+						{% for c_trail in fuel_trails %}
+					        <tr>				        	
+					            <td {% if c_trail.id == c_trail.object_id %} class="text-success" {% else %} class="text-danger" {% endif %}">	
+						            [FUEL] {{ c_trail.object_id }} | 
+						            [TRAIL] {{ c_trail.id }} | 
+						            (fuel type: {{ c_trail.field_dict.fuel_type }}) | 
+						            (amount: {{ c_trail.field_dict.amount }}) | 
+						            (priority: {{ c_trail.field_dict.priority }}) | 
+						            {{ c_trail.revision.date_created }} | 
+						            {{ c_trail.revision.user }}
+					        	</td>
+					        </tr>
+				        {% endfor %}
+
+						{% for c_trail in comments_trails %}
+					        <tr>					        	
+					            <td {% if c_trail.id == c_trail.object_id %} class="text-success" {% else %} class="text-danger" {% endif %}">					        	
+						            [COMMENT] {{ c_trail.object_id }} | 
+						            [TRAIL] {{ c_trail.id }} | 
+						            {{ c_trail }} | 
+						            {{ c_trail.revision.date_created }} | 
+						            {{ c_trail.revision.user }}
+					        	</td>
+					        </tr>
+				        {% endfor %}
+					    </tbody>
+					</table>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close Trail</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>

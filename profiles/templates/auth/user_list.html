@@ -1,0 +1,201 @@
+{% extends 'superior.html' %}
+{% load profile_tags_filters %}
+
+{% block styles %}
+    <style>
+        input[type=text] {
+            width: 50px;
+            -webkit-transition: width 0.4s ease-in-out;
+            transition: width 0.4s ease-in-out;
+        }
+
+        /* When the input field gets focus, change its width to 100% */
+        input[type=text]:focus {
+            width: 15%;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+<section class="table-users">
+    <div class="table-agile-info">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Users
+                <input id="user-search" type="text" name="search" placeholder="Search.." class="form-control d-inline ml-5"> 
+            </div>
+            <div>
+                <table id="searchdata" class="table" ui-jq="footable" ui-options='{
+                    "paging": {
+                    "enabled": true
+                    },
+                    "filtering": {
+                    "enabled": true
+                    },
+                    "sorting": {
+                    "enabled": true
+                    }}'>
+                    <thead>
+                        <tr>
+                            <th>Username</th>    
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th data-breakpoints="xs">Job Title</th>
+                            <th data-breakpoints="xs sm md" data-title="DOB">City</th>
+                            <th>Office</th>
+                            <th>Department</th>
+                            <th>Level</th>
+                            {% if request.user|has_group:"Human Resources"  %}
+                                <th>Satus</th>
+                            {% endif %}
+                            {% if request.user|has_group:"Administrator"  %}
+                                <th>View Profile</th>
+                            {% endif %}
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for person in object_list %}
+                                {% if not person.user_profile.active %}
+                                    <tr data-expanded="true" class="bg-warning text-white">
+                                {% else %}
+                                    <tr data-expanded="true"class="">
+                                {% endif %}
+                                <td>{{ person.username }}</td>
+                                <td>{{ person.first_name }}</td>
+                                <td>{{ person.last_name }}</td>
+                                <td>{{ person.user_profile.title }}</td>
+                                <td>{{ person.user_profile.city }}</td>
+                                <td>{{ person.user_profile.office }}</td>
+                                <td>{{ person.user_profile.department }}</td>
+                                <td>{{ person.user_profile.level }}</td>    
+
+                                {% if request.user|has_group:"Human Resources"  %}                            
+                                    <td>
+                                        {% if person.user_profile.active %}
+                                            <span class="text-success"><i class="fa fa-check-circle"></i></span>
+                                        {% else %}
+                                            <span class="text-danger"><i class="fa fa-check-circle"></i></span>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                                {% if request.user|has_group:"Administrator"  %}
+                                    <td>
+                                        <a href="{{ person.user_profile.get_absolute_url }}">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    </td>  
+                                {% endif %} 
+
+                            </tr>
+                        {% empty %}
+                            You have nobody registered yet
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if is_paginated %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item "><a href="?page={{ page_obj.previous_page_number }}"><i class="fa fa-angle-left"></i></a></li>
+                            {% else %}
+                                <li class="page-item disabled"><a href="#"><i class="fa fa-angle-left"></i></a></li>
+                            {% endif %}
+                            {% for i in paginator.page_range %}
+                                {% if page_obj.number == i %}
+                                    <li class="page-item"><span>{{ i }}</span></li>
+                                {% else %}
+                                    <li class="page-item "><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <li clas\page-item ><a href="?page={{ page_obj.next_page_number }}"><i class="fa fa-angle-right"></i></a></li>
+                            {% else %}
+                                <li class="page-item disabled"><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}    
+
+{% block scripts %}
+    <script>
+        $(document).ready(function(){
+            
+            /* Nano Templates - https://github.com/trix/nano */
+            function nano(template, data) {
+              return template.replace(/\{([\w\.]*)\}/g, function(str, key) {
+                var keys = key.split("."), v = data[keys.shift()];
+                for (var i = 0, l = keys.length; i < l; i++) v = v[keys[i]];
+                return (typeof v !== "undefined" && v !== null) ? v : "";
+              });
+            }  
+            
+            $('input#user-search').on('keyup', function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                $.ajax({
+                    method: 'GET',
+                    url: '{% url 'profiles:users-ajax-search' %}',
+                    data: {
+                        qry: $(this).val()
+                    },
+                    success: function(res){
+                        $('#searchdata').html('');   
+                        $('ul.pagination').css('display','none');
+                        $('#searchdata').append(headTemplate);
+                        $.each(res, function(i, user){                              
+                            $('#searchdata').append(nano(bodyTemplate, user));                            
+                        });
+                    },
+                    error: function(err){
+                    }
+                })
+                
+            });
+        
+            var headTemplate = `
+                        <thead>
+                            <tr>
+                                <th>Username</th>    
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th data-breakpoints="xs">Job Title</th>
+                                <th data-breakpoints="xs sm md" data-title="DOB">City</th>
+                                <th>Office</th>
+                                <th>Department</th>
+                                <th>Level</th>
+                                <th class="hider">Satus</th>
+                                <th class="hider">View Profile</th>
+                            </tr>
+                        </thead>
+                            ` 
+            var bodyTemplate = `
+                       <tr data-expanded="true" class="">
+                            <td>{username}</td>
+                            <td>{first_name}</td>
+                            <td>{last_name}</td>
+                            <td>{title}</td>
+                            <td>{city}</td>
+                            <td>{office}</td>
+                            <td>{department}</td>
+                            <td>{level}</td>
+                            <td class="hider">{status}</td>                             
+                            <td class="hider">
+                                <a href="/profiles/profile-{profile_id}/detail">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </td> 
+                        </tr>
+                            `
+            
+        });
+    </script>
+{% endblock %}

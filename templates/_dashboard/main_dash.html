@@ -1,0 +1,25 @@
+{% extends 'superior.html' %}
+{% load static %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+	{% breadcrumb "Home" "/" %}
+{% endblock %}
+
+{% block content %}
+
+    <section class="row">
+        <div class="col-8">
+            <div class="dash-item bg-white mb-4">
+                <h3 class="p-2 text-uppercase">Notice Board</h3>
+                <hr>
+                {% include './notices.html' %}
+            </div>
+        </div>
+
+        <div class="col-6">           
+        </div>
+
+    </section>
+
+{% endblock %}

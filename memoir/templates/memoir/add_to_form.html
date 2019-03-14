@@ -1,0 +1,13 @@
+<form id="addToForm" method='POST' action='{% url "memoir:add-to" memo_id=memo.pk memo_slug=memo.slug %}' style="display: inline;">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-6">
+            <input id="to" name="to" class="form-control form-control-sm" type="text" placeholder="Add TO: person by their username">
+        </div>
+        <div class="col-2">
+            <button type="submit" class="btn btn-info">Add</button>
+        </div>
+    </div>
+    {{ field.errors }}
+    {{ form.errors }}
+</form>

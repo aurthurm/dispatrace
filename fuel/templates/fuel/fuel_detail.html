@@ -1,0 +1,197 @@
+{% extends 'superior.html' %}
+{% load fuel_tags_filters %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4">
+        <div class="card {% fuel_urgency fuel=object %}" style="width: 18rem;">
+            <div class="card-header">
+                Request for {{object.fuel_type}} 
+                <span class="float-right">
+                        {% fuel_status fuel=fuel as status %}
+                        {{status|safe}} 
+                </span>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-6">From: {{object.origin}}</div><div class="col-6">To: {{object.destination}}</div>
+                    </div>
+                    
+                </li>
+                <li class="list-group-item">Volume: {{object.amount}} litres</li>
+                <li class="list-group-item">Date Required: {{object.date_required}}</li>
+            </ul>
+            <div class="card-body">
+                <h5 class="card-title">Reason</h5>
+                <p class="card-text">
+                    {{object.reason}}
+                </p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">By:  @{{object.requester}} <br/>DEPT: {{object.requester.user_profile.department }}<br/>On: {{object.date_requested}} <br /> V REG: {{object.registration}} </li>
+            </ul>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <footer class="blockquote-footer"><small>ID:</small> <cite title="Source Title"> <small>{{ object.reference_number }}</small></cite></footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+    <div class="col-7 bg-white p-4">
+        <div class="row" >
+            <div class="col-12 pb-4  d-flex justify-content-around" style="border-bottom: 1px solid gray">
+                {% if object.assessor != None %}
+                    <span>
+                        <h4 class="d-inline">Assessor</h4> : <span class="badge badge-info" style="font-size: 1.2em !important;" data-toggle="tooltip" data-placement="top" title="{{ object.assessor.user_profile.title }}">@{{object.assessor}}</span>
+                    </span>
+                {% endif %}
+                {% if object.approver != None %}
+                    <span>
+                        <h4 class="d-inline">Approver</h4>: <span class="badge badge-info" style="font-size: 1.2em !important;" data-toggle="tooltip" data-placement="top" title="{{ object.approver.user_profile.title }}">@{{object.approver}}</span>
+                    </span>
+                {% endif %}
+            </div>
+            <div class="col-12 d-flex justify-content-end p-2">
+                {% can_comment fuel=fuel user=user as c_comment %} 
+                {% if c_comment %}
+                <span class="mr-2">
+                    <span id="fuelAddComment" class="badge badge-success" style="font-size: 1em !important;">ADD COMMENT</span>
+                </span>
+                {% endif %}
+                {% if 1 == 1 %}
+                <span>
+                    <!-- <a class="badge badge-warning" style="font-size: 1em !important;" href="{% url 'fuel:fuel-reassign' fuel_id=fuel.pk %}">REASSIGN</a> -->
+                </span>
+                {% endif %}
+            </div>
+            <div class="col-12 fuel-messages">
+              
+            </div>
+            <div class="col-12 mt-5" id="fuel-comment" style="display: none">
+                <form action="{% url 'fuel:fuel-add-comment' fuel_id=object.pk %}" >
+                    <div class="form-group row p-1">
+                        <div class="col-3">
+                            <label for="comment">Comment</label>
+                        </div>
+                        <div class="col-9">
+                            <textarea name="comment" id="comment" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row p-1">
+                        <div class="col-3">
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="col-6">
+                            <input type="password" name="password" id="password" class="form-control" />
+                        </div>
+                        <div class="col-3">
+                            <input type="submit" name="submit" value="submit" class="form-control" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-12 mt-5">
+                {% for comment in fuel.comment_fuel.all %}
+                    <div class="row mb-4">
+                        <div class="col-3">
+                        <span class="badge badge-info" style="font-size: 1em !important;">@{{comment.commenter}}</span> <br>
+                        <span class="" style="font-size: 0.525em !important;">{{comment.timestamp}}</span>
+                        </div>
+                        <div class="col-9">
+                            {{comment.comment}}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-12">
+                <hr>
+                <span class="fuel-close-messages p-2 mb-4"></span>
+                {% can_approve fuel=fuel user=user as c_approve %} 
+                {% if user == fuel.approver and fuel.is_open and c_approve %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="fuel-acceptance" id="inlineRadio1" value="accepted" checked="checked">
+                    <label class="form-check-label" for="inlineRadio1">Accept</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="fuel-acceptance" id="inlineRadio2" value="declined">
+                    <label class="form-check-label" for="inlineRadio2">Decline</label>
+                </div>
+                <a id="close-fuel" class="btn btn-danger btn-lg" close-href="{% url 'fuel:close-request' fuel_id=fuel.pk %}">Close Request.</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function(){
+            $('#fuelAddComment').on('click', function(){
+                $('#fuel-comment').toggle('slow')
+            });
+
+            $('form').on('submit', function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var messages_area = $(".fuel-messages");
+                var data = $(this).serialize();
+                var $form = $(this);
+                $.ajax({
+                    method: 'POST',
+                    url: $(this).attr('action'),
+                    data: data,
+                    success: function(res){
+                        if (res.pass_passed === 'yes') {
+                            $form.hide();
+                            messages_area.removeClass('bg-danger');
+                            messages_area.addClass('bg-success');
+                            messages_area.html('');
+                            messages_area.html(res.success_message);
+                            window.setTimeout(function () { window.location.reload() }, 1000);
+                        } else {
+                            messages_area.html(res.success_message);
+                            messages_area.addClass('bg-danger');
+                        }
+                    },
+                    error: function(err){
+                    }
+                })
+            });
+
+            $('#close-fuel').on('click', function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var messages_area = $(".fuel-close-messages");
+                $.ajax({
+                    method: 'post',
+                    url: "{% url 'fuel:close-request' fuel_id=fuel.pk %}",
+                    data: {
+                        acceptance: $("input[name='fuel-acceptance']:checked").val(),
+                    },
+                    success: function(res){
+                        $(".form-check.form-check-inline").toggle('fast');
+                        $("#close-fuel").toggle('fast');
+                        if (res.state === 'accepted'){
+                            messages_area.removeClass('bg-danger');
+                            messages_area.addClass('bg-success');
+                        }
+                        if (res.state === 'declined') {
+                            messages_area.removeClass('bg-success');
+                            messages_area.addClass('bg-danger');
+                        }
+                        messages_area.html('');
+                        messages_area.html(res.success_message);
+                        window.setTimeout(function () { window.location.reload() }, 2000);
+                    },
+                    error: function(err){
+                        console.log(err)
+                    }
+                })
+
+            });
+
+        })
+    </script>  
+{% endblock %}

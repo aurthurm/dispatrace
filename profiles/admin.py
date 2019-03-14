@@ -1,0 +1,20 @@
+from django.contrib import admin
+
+from profiles.models import *
+
+class ProfileAdmin(admin.ModelAdmin):
+	list_display = [
+		'user',
+		'title',
+		'city',
+		'office',
+		'department',
+		'level',
+	]
+
+admin.site.register(UserProfile, ProfileAdmin)
+admin.site.register(Level)
+admin.site.register(Department)
+admin.site.register(Office)
+admin.site.register(City)
+admin.site.register(Country)

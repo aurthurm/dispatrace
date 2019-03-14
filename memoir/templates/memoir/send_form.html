@@ -1,0 +1,17 @@
+{% load memo_tags_filters %}
+<form id="SendForm" method='POST' action='{% url 'memoir:memo-send' memo_id=memo.pk memo_slug=memo.slug %}'>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-3">            
+            <label for="c_password" class="form-control form-control-sm bg-dark text-white">Enter Password to send</label>
+        </div>
+        <div class="col-6">
+            <input id="c_password" name="c_password" class="form-control form-control-sm" type="password" placeholder="Enter Password to send">
+        </div>
+        <div class="col-2">
+            <button type="submit" class="btn btn-info">SEND</button>
+        </div>
+    </div>
+    {{ field.errors }}
+    {{ form.errors }}
+</form>

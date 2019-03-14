@@ -1,0 +1,36 @@
+{% extends 'superior.html' %}
+
+{% block content %}
+
+ <div class="container-fluid">
+    {% include "create-memo.html" %}
+	<div class="d-flex justify-content-center mt-5 p-5">
+		<a href="#">
+    		<div class="hexagon d-flex align-items-center justify-content-center">
+    			<p class="text-white text-heavy h4">Groups</p>
+    		</div>
+		</a>
+		<a href="{% url 'memoir:memos-list' %}">
+    		<div class="hexagon d-flex align-items-center justify-content-center ml-2 mr-2">
+    			<p class="text-white text-heavy h4">Memos</p>
+    		</div>	  
+		</a>
+		<a href="#">  		
+    		<div class="hexagon d-flex align-items-center justify-content-center">
+    			<p class="text-white text-heavy h4">Tasks</p>
+    		</div>	  
+		</a>
+		<a href="#">  			    		
+	</div>
+	<div class="d-flex justify-content-center mt-5">  
+		<a href="{% url 'memoir:archived' %}">	
+    		<div class="flag d-flex align-items-center justify-content-center memo-archived">
+    			<p class="text-dark text-heavy h4">ARCHIVED</p>
+    		</div>
+		</a>	    			    		
+	</div>
+</div>	  
+
+{% endblock %}
+
+

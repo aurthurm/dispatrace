@@ -1,0 +1,51 @@
+{% load memo_tags_filters %}
+
+    <div class="col-4">
+
+        <div class="memo-listing mb-2 {% memo_urgency memo=memo %}">
+            {% if memo.archived %}
+                <div class="corner-ribbon top-right black">ARCHIVED</div>
+            {% elif memo.is_open and not memo.sent %}
+                <div class="corner-ribbon top-right gray">DRAFT</div>
+            {% elif memo.is_open and memo.sent %}
+                <div class="corner-ribbon top-right green">OPEN</div>
+            {% else %}
+                <div class="corner-ribbon top-right blue">CLOSED</div>
+            {% endif %}
+            <div class="card">
+                <div class="card-header">
+                    <a href="{{ memo.get_absolute_url }}">
+                        <h4 class="card-title">{{ memo.subject }} </h4>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <span class="badge badge-primary ml-1 p-1 text-white"  data-toggle="tooltip" data-placement="top" title="{{ memo.sender.user_profile.title }}">{{ memo.sender }}</span> |
+                    <span class="badge badge-info ml-1 p-1 text-white" data-toggle="tooltip" data-placement="top" title="{{ memo.to.user_profile.title }}">{{ memo.to }}</span> |
+                    {% if memo.recipients.all.count > 1 %}
+                        {% for recipient in memo.recipients.all|slice:"1" %}
+                            <span class="badge badge-primary mr-1 p-1 text-white" data-toggle="tooltip" data-placement="top" title="{{ recipient.user_profile.title }}">{{ recipient.username }}</span>                  
+                        {% endfor %}
+                        {% with count=memo.recipients.all.count %}
+                            <span class="badge badge-dark mr-1 p-1 text-white"> <i class="fa fa-plus"></i> {{ count|add:'-1' }}</span>  
+                        {% endwith %}        
+                    {% else %}
+                        {% for recipient in memo.recipients.all %}
+                            <span class="badge badge-primary mr-1 p-1 text-white">{{ recipient.username }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    <span class="float-right">
+                        <i class="fa fa-paperclip"></i> 
+                        <span class="badge badge-info mr-1">{{ memo.attachment_set.all|length }}</span>
+                        {% if memo.commenting_required %}
+                            <i class="fa fa-comments"></i>
+                            <span class="badge badge-info ml-1">
+                                {{ memo.memocomment_comment.all|length }}/{{ memo.recipients.all.count|add:"1" }}
+                            </span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="memo-ref-number text-center bg-dark text-white">{{ memo.reference_number }}</div>
+            </div>
+        </div>
+
+    </div>

@@ -1,0 +1,71 @@
+<table class="table" ui-jq="footable" ui-options='{
+    "paging": {
+    "enabled": true
+    },
+    "filtering": {
+    "enabled": true
+    },
+    "sorting": {
+    "enabled": true
+    }}'>
+    <thead>
+        {% if user.user_profile.has_admin_access %}
+            <tr>
+                <span>
+                    <a class="text-dark btn btn-outline-info" href="{% url 'profiles:city-add' %}">ADD CITY <span><i class="fa fa-plus"></i></span></a>
+                </span>
+            </tr>
+            <hr>
+        {% endif %}
+        <tr>
+            <th class="text-white">Country</th>    
+            <th class="text-white">City</th>    
+            <th class="text-white">Abbreviation</th>
+            <th></th>
+            {% if user.user_profile.has_admin_access %}
+                <th class="text-white">EDIT</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for city in cities %}
+            <tr>
+                <td class="text-white">{{ city.country.name }}</td>
+                <td class="text-white">{{ city.name }}</td>
+                <td class="text-white">{{ city.abbreviation }}</td>
+                <th></th>
+                {% if user.user_profile.has_admin_access %}
+                    <td>
+                        <a class="text-danger" href="{% url 'profiles:city-edit' city_id=city.pk %}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% empty %}
+            <tr>
+                <td class="text-white">You have no country registered yet</td>
+                <td></td>
+                <td></td>
+                <th></th>
+                <th></th>
+            </tr>            
+        {% endfor %}
+    </tbody>
+</table> 
+
+{% if cities.has_other_pages %}
+  <ul class="pagination">
+    {% if cities.has_previous %}
+      <li><a href="?page={{ cities.previous_page_number }}#list-city">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+
+    {% if cities.has_next %}
+      <li><a href="?page={{ cities.next_page_number }}#list-city">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}   

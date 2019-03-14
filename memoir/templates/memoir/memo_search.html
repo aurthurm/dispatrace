@@ -1,0 +1,76 @@
+{% extends 'superior.html' %}
+{% load memo_tags_filters %}
+
+{% block content %}
+
+	    <div class="container-fluid">
+            <h1 class="text-center mt-1">search for a memo here</h1>
+            <div id="memoSearch" class="row">
+                <div class="col-4 offset-4">
+                    <form id="searchform" role="search" action="{% url 'memoir:memo-search' %}" method="get" accept-charset="utf-8">
+                        <div class="input-group">
+                            <input class="field form-control" id="memosearchbox" name="q" type="text" placeholder="Type and hit enter">
+                            <span class="input-group-btn">
+                            <input class="submit btn btn-primary" id="searchsubmit"  type="submit"  value="" style="display: none;">
+                        </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <hr>
+            <div id="searchdata" class="card-columns">
+            </div>
+
+	    </div>	   
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+
+            /* Nano Templates - https://github.com/trix/nano */
+            function nano(template, data) {
+                return template.replace(/\{([\w\.]*)\}/g, function (str, key) {
+                    var keys = key.split("."), v = data[keys.shift()];
+                    for (var i = 0, l = keys.length; i < l; i++) v = v[keys[i]];
+                    return (typeof v !== "undefined" && v !== null) ? v : "";
+                });
+            }
+
+            $('input#memosearchbox').on('keyup', function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                $.ajax({
+                    method: 'GET',
+                    url: '{% url 'memoir:memo-search' %}',
+                    data: {
+                        qry: $(this).val()
+                    },
+                    success: function(res){
+                        $('#searchdata').html('');
+                        $.each(res, function (i, memo) {
+                            $('#searchdata').append(nano(template, memo));
+                        });
+                   },
+                    error: function(err){
+                    }
+                })
+
+            });
+            var template = `
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <a href="memo/{memo_id}/{memo_slug}"><h5 class="card-title">{subject}</h5></a>
+                                    <p class="card-text"></p>
+                                </div>
+                                      <footer class="blockquote-footer text-muted">                                  
+                                    ID <cite title="Source Title">{reference}</cite>                                 
+                                </footer>
+                            </div>
+                            `
+
+        });
+    </script>
+{% endblock %}

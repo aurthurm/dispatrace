@@ -1,0 +1,13 @@
+<form id="addRecipientForm" method='POST' action='{% url "memoir:add-recipient" memo_id=memo.pk memo_slug=memo.slug %}'>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-6">
+            <input id="recipients" name="recipients" class="form-control form-control-sm" type="text" placeholder="Add Recipient(s) ...type usernames">
+        </div>
+        <div class="col-2">
+            <button type="submit" class="btn btn-info">Add</button>
+        </div>
+    </div>
+    {{ field.errors }}
+    {{ form.errors }}
+</form>

@@ -1,0 +1,66 @@
+<table class="table" ui-jq="footable" ui-options='{
+    "paging": {
+    "enabled": true
+    },
+    "filtering": {
+    "enabled": true
+    },
+    "sorting": {
+    "enabled": true
+    }}'>
+    <thead>
+        {% if user.user_profile.has_admin_access %}
+            <tr>
+                <span>
+                    <a class="text-dark btn btn-outline-info" href="{% url 'profiles:level-add' %}">ADD LEVEL <span><i class="fa fa-plus"></i></span></a>
+                </span>
+            </tr>
+            <hr>
+        {% endif %}
+        <tr>
+            <th class="text-white">LEVEL</th>   
+            <th class="text-white">NAME</th>  
+            {% if user.user_profile.has_admin_access %}
+                <th class="text-white">EDIT</th>
+            {% endif %}
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for level in levels %}
+            <tr>
+                <td class="text-white">{{ level.level }}</td>
+                <td class="text-white">{{ level.name }}</td>
+                {% if user.user_profile.has_admin_access %}
+                    <td>
+                        <a class="text-danger" href="{% url 'profiles:level-edit' level_id=level.pk %}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% empty %}
+            <tr>
+                <td class="text-white">You have no country registered yet</td>
+                <td></td>
+                <td></td>
+            </tr>            
+        {% endfor %}
+    </tbody>
+</table>  
+
+{% if levels.has_other_pages %}
+  <ul class="pagination">
+    {% if levels.has_previous %}
+      <li><a href="?page={{ levels.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+
+    {% if levels.has_next %}
+      <li><a href="?page={{ levels.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}

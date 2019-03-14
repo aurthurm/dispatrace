@@ -1,0 +1,86 @@
+{% load memo_tags_filters %}
+<table class="table table-hover m-0">
+    <tbody>
+        <tr>
+            <th scope="row">TO</th>
+            <td class="">:
+                <span id="memoto"><span class="badge badge-primary ml-1 p-2 text-white" data-toggle="tooltip" data-placement="top" title="{{ memo.to.user_profile.title }}">{{ memo.to }} : {{ memo.to.user_profile.level.level }}</span></span>
+                <span class="addTo" style="display:none">
+                    {% include "memoir/add_to_form.html" %}
+                </span>
+                {% if request.user == memo.sender and can_edit %}
+                    <!-- <span class="float-right mr-2">
+                        <span class="revealTo bg-white p-1 text-dark mr-2">
+                           ADD TO: <i class="fa fa-user-plus mr-2"></i>
+                        </span>
+                    </span> -->
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">FROM</th>
+            <td>:                
+                <span class="badge badge-warning ml-1 p-2 text-white" data-toggle="tooltip" data-placement="top" title="{{ memo.sender.user_profile.title }}">{{ memo.sender }} : {{ memo.sender.user_profile.level.level }}</span>
+                <span class="float-right mr-2">
+                    {{ memo.date_sent }}
+                    {% if request.user == memo.sender and can_edit %}
+                        <a class="bg-white p-1 text-dark mr-2" href="{% url 'memoir:memo-edit' memo_id=memo.pk memo_slug=memo.slug %}" class="mx-4">
+                           EDIT <i class="fa fa-edit mr-2"></i>
+                        </a>
+                    {% endif %}
+                    {% reassign memo=memo user=user as can_reassign %}
+                    {% if can_reassign %}
+                        <a class="bg-white p-1 text-dark mr-2" href="{% url 'memoir:memo-reassign' memo_id=memo.pk memo_slug=memo.slug %}" class="mx-4">
+                           REASSIGN <i class="fa fa-edit mr-2"></i>
+                        </a>
+                    {% endif %}
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">CC</th>
+            <td colspan="2">:
+                {% for recipient in memo|sortbyuserlevel %}
+                <span class="badge badge-{% commented_class memo=memo recipient=recipient %} ml-1 p-2 text-white" data-toggle="tooltip" data-placement="top" title="{{ recipient.user_profile.title }}">{{ recipient.username }} : {{ recipient.user_profile.level.level }}</span>
+                {% endfor %}
+                <span class="float-right mr-2">
+                    {% if request.user == memo.sender and can_edit %}
+                        <a class="bg-white p-1 text-dark mr-2" href="{% url 'memoir:attach-item' memo_id=memo.pk memo_slug=memo.slug %}">
+                            ATTACH <i class="fa fa-plus"></i>
+                        </a>
+                        <!-- <span class="revealAddRecipient bg-white p-1 text-dark mr-2">
+                            ADD RECIPIENT <i class="fa fa-user-plus mr-2"></i>
+                        </span> -->
+                    {% endif %}
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Subject</th>
+            <td class="text-dark text-uppercase">: {{ memo.subject }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Reference</th>
+            <td>: {{ memo.reference_number }}</td>
+        </tr>
+        {% if memo.attachment_set.all.count != 0 %}
+            <tr>
+                <th scope="row">Attachments <span class="badge badge-info ml-1 p-2 text-white">{{ memo.attachment_set.all.count }}</span></th>
+                <td>:                
+                    {% for attachment in memo.attachment_set.all  %}
+
+                        <a href="/media/{{ attachment.file }}" class="mr-1 btn btn-sm btn-info attachment-item" target="_blank"  
+                        data-toggle="tooltip"  data-placement="top" data-html="true" title="{{ attachment.file_name }}"
+                        attatchment-name="{{ attachment.file_name }}">
+                            Download
+                        </a>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr class="attachmemt-messages" style="display:none">
+                <th scope="row"></th>
+                <td class="attachment-name-message"></td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>

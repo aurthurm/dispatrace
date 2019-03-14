@@ -1,0 +1,44 @@
+{% extends 'superior.html' %}
+
+{% block content %}		
+	<!-- List group -->
+	<div class="container-fluid">
+		<div class="row">
+		  <div class="col-2">
+		    <div class="list-group" id="list-tab">
+		      <a class="list-group-item list-group-item-action {% if departments_active %}active{% endif %}" href="{% url 'profiles:config-list-departments' %}">Departments</a>
+		      <a class="list-group-item list-group-item-action {% if offices_active %}active{% endif %}" href="{% url 'profiles:config-list-offices' %}" >Offices/Branch</a>
+		      <a class="list-group-item list-group-item-action {% if cities_active %}active{% endif %}" href="{% url 'profiles:config-list-cities' %}" >Cities</a>
+		      <a class="list-group-item list-group-item-action {% if country_active %}active{% endif %}" href="{% url 'profiles:config-list-countries' %}" >Countries</a>
+		      <a class="list-group-item list-group-item-action {% if levels_active %}active{% endif %}"  href="{% url 'profiles:config-list-levels' %}">USER LEVELS</a>
+		    </div>
+		  </div>
+		  <div class="col-10">
+		    <div class="tab-content" id="nav-tabContent">
+				<div class="tab-pane fade {% if departments_active %}show active{% endif %}">
+					{% include 'configure/table_departments.html' %}
+				</div>
+				<div class="tab-pane fade {% if offices_active %}show active{% endif %}">
+					{% include 'configure/table_offices.html' %}
+				</div>
+				<div class="tab-pane fade {% if country_active %}show active{% endif %}">
+					{% include 'configure/table_countries.html' %}
+				</div>
+				<div class="tab-pane fade {% if cities_active %}show active{% endif %}">
+					{% include 'configure/table_cities.html' %}
+				</div>
+				<div class="tab-pane fade {% if levels_active %}show active{% endif %}">
+					{% include 'configure/table_levels.html' %}
+				</div>
+		    </div>
+		  </div>
+		</div>		
+	</div>
+
+{% endblock %}
+
+{%  block scripts %}
+	<script>
+		
+	</script>
+{% endblock %}

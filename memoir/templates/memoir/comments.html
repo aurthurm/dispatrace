@@ -1,0 +1,31 @@
+{% load static memo_tags_filters %}
+
+{% for comment in comments %}
+    {% can_view_last_comment memo=memo comment=comment user=user as view_comment %}
+    {% if view_comment %}
+        <li class="media">
+            <img class="mr-3 user-comment-img" src="{% static 'dispatrace/img/avatar1.jpg' %}" alt="Generic placeholder image">
+            <div class="media-body">
+                <h5 class="mt-0 mb-1 text-muted">
+                    <span class="badge badge-info">@{{ comment.commenter.username }}</span> 
+                    <small>
+                        <time>
+                            {{ comment.timestamp }}
+                        </time>
+                    </small>
+                    <span class="float-right mr-2">
+                        {% if request.user == comment.commenter and memo.is_open and can_edit_comment %}
+                            <span id="editComment" class="bg-white p-1 text-dark mr-2 lead comment-href mx-4" data-get-href="{% url 'memoir:comment-edit' memo_id=memo.pk comment_id=comment.pk %}">
+                                EDIT COMMENT <i class="fa fa-edit mr-2"></i>
+                            </span>
+                        {% endif %}
+                    </span>
+                </h5>
+                <div id="comment-{{ comment.pk }}" class="card-text comment-message">{{ comment.comment|safe }} </div>
+                {% include "memoir/edit_comment_form.html" %}
+                <div class="messages p-2 text-white mt-2"></div>
+                <hr>
+            </div>
+        </li>
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,91 @@
+{% load memo_tags_filters %}
+    <aside>
+        <div id="sidebar" class="nav-collapse">
+            <!-- sidebar menu start-->
+            <div class="leftside-navigation">
+                <ul class="sidebar-menu" id="nav-accordion">
+                    {% if 1 == 1 %}
+                        <li>
+                            <a class="active" href="{% url 'home' %}">
+                                <i class="fa fa-dashboard"></i>
+                                <span>DASHBOARD</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="sub-menu" >
+                        <a href="javascript:;">
+                            <i class="fa fa-car"></i>
+                            <span>FUEL</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="{% url 'fuel:request-fuel' %}">New Request</a></li>
+                            <li><a href="{% url 'fuel:requests-listings' %}">Requests</a></li>
+                            <!-- <li><a href="{% url 'fuel:reports-fuel' %}">Fuel Summaries</a></li> -->
+                            <li><a href="{% url 'fuel:fuel-archives' %}">Fuel Archives</a></li>
+                        </ul>
+                    </li>                    
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="fa fa-book"></i>
+                            <span>MEMORANDUM</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="{% url 'memoir:create-memo' %}">New MEMO</a></li>
+                            <li class="{{ intray_active_class }}"><a href="{% url 'memoir:in-tray' %}" class="d-flex justify-content-between">In Tray<span id="intrayCount" class="badge badge-info badge-sm mr-2"></span></a></li>
+    						<li class="{{ outtray_active_class }}"><a href="{% url 'memoir:out-tray' %}"class="d-flex justify-content-between">Out Tray<span id="outtrayCount" class="badge badge-info badge-sm mr-2"></span></a></li>
+                            <li class="{{ drafts_active_class }}"><a href="{% url 'memoir:drafts' %}"class="d-flex justify-content-between">Drafts<span id="draftsCount" class="badge badge-info badge-sm mr-2"></span></a></li>
+                            <li class="{{ closed_active_class }}"><a href="{% url 'memoir:closed' %}"class="d-flex justify-content-between">Closed<span id="closedCount" class="badge badge-info badge-sm mr-2"></span></a></li>
+                            <li class="{{ archived_active_class }}"><a href="{% url 'memoir:archived' %}"class="d-flex justify-content-between">Archived<span id="archivedCount" class="badge badge-info badge-sm mr-2"></span></a></li>
+                            <li class="{{ search_active_class }}"><a href="{% url 'memoir:memo-search' %}">Search</a></li>
+                        </ul>
+                    </li>
+                    {% if request.user|has_group:"Administrator" %}
+                        <!-- <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class=" fa fa-bar-chart-o"></i>
+                                <span>REPORTS</span>
+                            </a>
+                        </li> -->
+                    {% endif %}
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="fa fa-user"></i>
+                            <span>USERS</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="{% url 'profiles:users-list' %}">User List</a></li>                            
+                            {% if request.user|has_group:"Administrator" %}
+                                <li><a href="{% url 'create-account' %}">Add New User</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    {% if request.user|has_group:"Administrator" %}
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class=" fa fa-cogs"></i>
+                                <span>SETTINGS</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="{% url 'profiles:config-list-departments' %}">Configurations</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if request.user|has_group:"Notice Creators" %}
+                        <li>
+                            <a href="{% url 'notice:notice-listings' %}">
+                                <i class="fa fa-bell"></i>
+                                <span>NOTICES MANAGER</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="{% url 'logout' %}">
+                            <i class="fa fa-sign-out"></i>
+                            <span>LOG OUT</span>
+                        </a>
+                    </li>
+                </ul>           
+            </div>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>

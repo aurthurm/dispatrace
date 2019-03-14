@@ -1,0 +1,18 @@
+<form id='memoCommentFormm' method='POST' action='{% url "memoir:memo-comment" memo_id=memo.pk memo_slug=memo.slug %}'>
+    {% csrf_token %}
+    <div class="row">
+        <!-- <label for="comment" hidden>Comment</label> -->
+        <div class="col-10 offset-1">
+            <textarea class="form-control" id="comment" rows="3"></textarea>
+        </div>
+    </div>
+    <div class="row my-3">
+        <!-- <label for="password_confirm" >Password Confirmation</label> -->
+        <div class="col-4 offset-3">
+            <input type="password" class="form-control" id="password_confirm" placeholder="Password">
+        </div>
+        <div class="col-2">
+            <button type="submit" class="btn btn-info">Commit</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,4 @@
+<form id="comment-{{ comment.pk }}" class="editForm" method='POST' action='{% url "memoir:comment-edit" memo_id=memo.pk comment_id=comment.pk %}' style="display:none;">
+    {% csrf_token %}
+    {% include "memoir/_form_body.html" %}
+</form>

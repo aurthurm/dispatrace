@@ -1,0 +1,128 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html style="background-image: linear-gradient(to top, #0ba360 0%, #3cba92 100%);">
+    <head>
+        <title>DISPATRACE</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!-- //bootstrap-css -->
+        <!-- font CSS -->
+      <!--   <link href='//fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'> -->
+        <!-- font-awesome icons -->
+        <link rel="stylesheet" href="{% static 'dispatrace/css/font.css' %}" type="text/css"/>
+        <link href="{% static 'dispatrace/css/font-awesome.css' %}" rel="stylesheet"> 
+        <!-- <script src="{% static 'dispatrace/fonts/fontawesome/js/fontawesome-all.js' %}"></script> -->
+        <!-- <link rel="stylesheet" href="{% static 'dispatrace/fonts/fontawesome/css/fa-svg-with-js.css' %}"> -->
+        <link rel="stylesheet" href="{% static 'dispatrace/css/morris.css' %}" type="text/css"/>
+        <!-- Custom CSS -->
+        <link href="{% static 'dispatrace/css/style.css' %}" rel='stylesheet' type='text/css' />
+        <link href="{% static 'dispatrace/css/style-responsive.css' %}" rel="stylesheet"/>
+        <!-- bootstrap-css -->
+        <link rel="stylesheet" href="{% static 'dispatrace/css/bootstrap.min.css' %}" >
+        <link href="{% static 'dispatrace/css/main.css' %}" rel="stylesheet"/>
+        <link href="{% static 'dispatrace/css/jquery-ui.css' %}" rel="stylesheet"/>
+        <!-- //font-awesome icons -->
+        <script src="{% static 'dispatrace/js/jquery.min.js' %}"></script>
+        <script src="{% static 'dispatrace/js/jquery-ui.js' %}"></script>
+        <script src="{% static 'dispatrace/js/raphael-min.js' %}"></script>
+        <script src="{% static 'dispatrace/js/morris.js' %}"></script>
+        <!--[if lt IE 9]>
+            <script src="{% static 'dispatrace/html5shim/html5shiv.min.js' %}"></script>
+        <![endif]-->
+        {% block styles %}{% endblock %}
+        <style>
+
+            .dcjq-icon {
+                background:url('{% static 'dispatrace/img/nav-expand.png' %}') no-repeat top;
+            }
+            .active .dcjq-icon {
+                background:url('{% static 'dispatrace/img/nav-expand.png' %}') no-repeat bottom;
+            }
+            .right-side-accordion .dcjq-icon {
+                background:url('{% static 'dispatrace/img/acc-expand.png' %}') no-repeat top;
+            }
+            .right-side-accordion .active .dcjq-icon {
+                background:url('{% static 'dispatrace/img/acc-expand.png' %}') no-repeat bottom;
+            }.log-arrow-up {
+                background:url('{% static 'dispatrace/img/top-arrow.png' %}') no-repeat;
+            }.notify-arrow {
+                background:url('{% static 'dispatrace/img/top-arrow.png' %}') no-repeat;
+            }.search {
+                background: #8b5c7e url('{% static 'dispatrace/img/search-icon.png' %}') no-repeat 10px 8px;
+            }#upload ul li span{
+                background: url('{% static 'dispatrace/img/icons.png' %}') no-repeat;
+            }
+
+        </style>
+    </head>
+    <body style="background-image: linear-gradient(to top, #0ba360 0%, #3cba92 100%);">       
+        {% if user.is_authenticated %}
+            <div id="statsurl" dash-stats-url="{% url 'dash-stats' %}"></div>
+            <input type="text" id="getNotification" value="true" hidden>
+        {% else %}
+            <div id="statsurl" dash-stats-url=""></div>
+            <input type="text" id="getNotification" value="false" hidden>
+        {% endif %}
+
+        <section id="container" class="outer-most"> 
+
+             {% if user.is_authenticated %}
+                <!--header start-->
+                <header class="header fixed-top clearfix">
+                    <!--logo start-->
+                    <div class="brand">
+                        <a href="{% url 'home' %}" class="logo">
+                            
+                           DT <img src="{% static 'dispatrace/img/feather-line.png' %}" alt="" id="logo">
+                        </a>
+                        <div class="sidebar-toggle-box">
+                            <div class="fa fa-bars"></div>
+                        </div>
+                    </div>
+                    <!--logo end-->
+                    {% include "_superior/top_navbar.html" %}
+                </header>
+                <!--header end-->
+
+                <!--sidebar start-->
+                    {% include "_superior/aside.html" %}
+                <!--sidebar end-->
+
+            {% endif %}
+            <!--main content start-->            
+            <section id="main-content">
+
+            	<section class="wrapper">
+                    {% block content %}
+
+                    {% endblock %}
+                </section>
+
+            </section>
+            <!--main content end-->
+             <div class="footer">
+                <div class="wthree-copyright text-center">
+                    <p>© 2018 Dispatrace. | Dispatch and Trace Memos | Developed by <a href="http://www.icotech.co.zw" target='_blank' class="text-danger">ICOTECH </a> i.p.w <span class="text-danger">e4X Systems</span> </p>
+                </div>
+            </div>  
+        </section>
+
+        <script src="{% static 'dispatrace/js/popper.min.js' %}"></script>
+        <script src="{% static 'dispatrace/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'dispatrace/js/jquery.dcjqaccordion.2.7.js' %}"></script>
+        <script src="{% static 'dispatrace/js/scripts.js' %}"></script>
+        <script src="{% static 'dispatrace/js/jquery.slimscroll.js' %}"></script>
+        <script src="{% static 'dispatrace/js/jquery.nicescroll.js' %}"></script>
+        <script src="{% static 'dispatrace/js/jquery.scrollTo.js' %}"></script>
+        <script src="{% static 'dispatrace/js/main.js' %}"></script>
+        <script src="{% static 'dispatrace/js/dashstats.js' %}"></script>
+        <script src="{% static 'notify/notifyX.min.js' %}"></script>
+        {% block scripts %}
+        {% endblock %}
+        {% include 'session_security/all.html' %}
+        <script>
+            sessionSecurity.confirmFormDiscard = undefined;
+        </script>
+    </body>
+</html>

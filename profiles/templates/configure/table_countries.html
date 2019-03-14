@@ -1,0 +1,50 @@
+<table class="table" ui-jq="footable" ui-options='{
+    "paging": {
+    "enabled": true
+    },
+    "filtering": {
+    "enabled": true
+    },
+    "sorting": {
+    "enabled": true
+    }}'>
+    <thead>
+        {% if user.user_profile.has_admin_access %}
+            <tr>
+                <span>
+                    <a class="text-dark btn btn-outline-info" href="{% url 'profiles:country-add' %}">ADD COUNTRY <span><i class="fa fa-plus"></i></span></a>
+                </span>
+            </tr>
+            <hr>
+        {% endif %}
+        <tr>
+            <th class="text-white">Name</th>    
+            <th></th>
+            {% if user.user_profile.has_admin_access %}
+                <th class="text-white">EDIT</th>
+            {% endif %}
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in countries %}
+            <tr>
+                <td class="text-white">{{ c.name }}</td>
+                <td></td>
+                {% if user.user_profile.has_admin_access %}
+                    <td>
+                        <a class="text-danger" href="{% url 'profiles:country-edit' country_id=c.pk %}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% empty %}
+            <tr>
+                <td class="text-white">You have no country registered yet</td>
+                <td></td>
+                <td></td>
+            </tr>            
+        {% endfor %}
+    </tbody>
+</table>    

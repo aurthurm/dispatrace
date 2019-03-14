@@ -1,0 +1,91 @@
+{% extends 'superior.html' %}
+
+{% block content %}
+<div class="container bg-info py-4">
+    <h4 class="text-uppercase">CREATE A FUEL REQUEST</h4>
+    <hr><br>
+    <form method="POST" class="form-horizontal" action="">
+        {% csrf_token %}
+        {{ form.media }}
+        <div class="form-row">
+            <div class="col form-group">
+                <div class="row"> 
+                    <label class="col-4">Fuel Type</label>
+                    <span class="col-8">{{ form.fuel_type }}</span>                    
+                </div>
+            </div>
+            <div class="col form-group">
+                <div class="row">
+                    <label class="col-4">Priority</label>
+                    <span class="col-8">{{ form.priority }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <div class="row">
+                    <label class="col-4">Origin</label>
+                    <span class="col-8">{{ form.origin }}</span>
+                </div>
+            </div>
+            <div class="col form-group">
+                <div class="row">
+                    <label class="col-4">Destination</label>
+                    <span class="col-8">{{ form.destination }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <div class="row">
+                    <label class="col-2">Date Required</label>
+                    <span class="col-10">{{ form.date_required }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <div class="row">
+                    <label class="col-4">Volume (Litres)</label>
+                    <span class="col-8">{{ form.amount }}</span>
+                </div>
+            </div>
+            <div class="col form-group">
+                <div class="row">
+                    <label class="col-4">Vehicle Reg</label>
+                    <span class="col-8">{{ form.registration }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <div class="row">
+                    <label class="col-4">Assessor</label>
+                    <span class="col-8">{{ form.assessor }}</span>
+                </div>
+            </div>
+            <div class="col form-group">
+                <div class="row">
+                    <label class="col-4">Approver</label>
+                    <span class="col-8">{{ form.approver }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <div class="row">
+                    <label class="col-2">Reason</label>
+                    <span class="col-10">{{ form.reason }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-10 offset-2 ">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

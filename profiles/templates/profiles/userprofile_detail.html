@@ -1,0 +1,83 @@
+{% extends 'superior.html' %}
+{% load profile_tags_filters %}
+
+{% block content %}			
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-4 profile-info widget">
+			<div class="stats-info-agileits {% if not object.active %}bg-danger{% endif %}">
+				<div class="stats-title">
+					<h4 class="text-center">
+						{{ object.user.first_name }} {{ object.user.last_name }}	
+                        {% if request.user|has_group:"Administrator" %}					
+					        <span class="float-right mr-auto">
+					            <a class="text-dark btn btn-outline-info" href="{% url 'profiles:profile-edit' profile_id=object.pk %}"><span><i class="fa fa-edit"></i></span></a>
+					        </span>
+				        {% endif %}
+					</h4>
+				</div>
+				<div class="stats-body">
+					<table class="table" ui-jq="footable" ui-options='{
+					    "paging": {
+					    "enabled": true
+					    },
+					    "filtering": {
+					    "enabled": true
+					    },
+					    "sorting": {
+					    "enabled": true
+					    }}'>
+						<thead>
+					        <tr>
+					            <th></th>    
+					            <th></th>
+					        </tr>
+					    </thead>
+					    <tbody>
+				            <tr>
+				                <td class="text-dark">Username</td>
+				                <td class="text-dark">@{{ object.user.username }}</td>
+				            </tr>
+				            <tr>
+				                <td class="text-dark">Permission Groups</td>
+				                <td class="text-dark">
+                                    {% if object.group.all.count > 0 %}
+                                        {% for group in object.group.all %}<span class="mr-1">{{ group.name }},</span>{% endfor %}
+                                    {% else %}
+                                        ----- 
+                                    {% endif %}</td>				                
+				            </tr>
+				            <tr>
+				                <td class="text-dark">Title</td>
+				                <td class="text-dark">{% if object.title %}{{ object.title }}{% else %} ----- {% endif %}</td>				                
+				            </tr>
+				            <tr>
+				                <td class="text-dark">Level</td>
+				                <td class="text-dark">{% if object.level %}{{ object.level }}{% else %} ----- {% endif %}</td>
+				            </tr>
+				            <tr>
+				                <td class="text-dark">Department</td>
+				                <td class="text-dark">{% if object.department %}{{ object.department }}{% else %} ----- {% endif %}</td>
+				            </tr>
+				            <tr>
+				                <td class="text-dark">Office/Branch</td>
+				                <td class="text-dark">{% if object.office %}{{ object.office }}{% else %} ----- {% endif %}</td>
+				            </tr>
+				            <tr>
+				                <td class="text-dark">City</td>
+				                <td class="text-dark">{% if object.city %}{{ object.city }}{% else %} ----- {% endif %}</td>
+				            </tr>
+				            <tr>
+				                <td class="text-dark">Country</td>
+				                <td class="text-dark">{% if object.city.country %}{{ object.city.country }}{% else %} ----- {% endif %}</td>
+				            </tr>
+					    </tbody>
+					</table>    
+				</div>
+			</div>
+		</div>		
+	</div>
+</div>
+
+{% endblock %}    

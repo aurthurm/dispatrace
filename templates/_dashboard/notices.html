@@ -1,0 +1,30 @@
+{% load notice_tags_filters %}
+<div class="accordion" id="dispatrace-notices">
+    {% for notice in notices %}
+    {% notice_view notice=notice user=user as can_view_notice %}
+        {% if can_view_notice %}
+            <div class="card {% notice_urgency notice=notice %}">
+                <div class="card-header p-0" id="heading{{notice.pk}}">
+                    <h5 class="mb-0">
+                        <span  class="pl-1 text-muted">{{ notice.creator.get_full_name }}</span>
+                        :<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{notice.pk}}"
+                            aria-expanded="false" aria-controls="collapse{{notice.pk}}">
+                        {{ notice.name }}
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapse{{notice.pk}}" class="collapse" aria-labelledby="heading{{notice.pk}}" data-parent="#dispatrace-notices">
+                    <div class="card-body">
+                        {{ notice.description|safe }}
+                    </div>
+                    <div  class="bg-dark text-danger d-flex justify-content-end">
+                       <span class="p-1"><small> Active Untill: {{ notice.expiry }}</small></span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% empty %}
+        <p class="p-2">There are no new notices</p>
+    {% endfor %}
+</div>

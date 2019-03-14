@@ -1,0 +1,39 @@
+{% extends 'superior.html' %}
+{% load memo_tags_filters %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-10 offset-1 bg-white p-5" style="margin-top: 3%;">
+            <h3 class="text-uppercase">{{ formTitle }}</h3>
+            <hr>
+        
+            <br>
+            {% if new_memo %}
+
+                {% include "memoir/form.html" %}
+
+            {% else %}
+                {% reassign memo=memo user=user as can_reassign %}
+                {% if user == memo.sender %}
+
+                    {% include "memoir/form.html" %}
+                
+                {% elif user in memo.recipients.all or user == memo.to and can_reassign %}
+                    
+                    {% include "memoir/form.html" %}
+
+                {% else %}
+                
+                    <div class="text-danger text-center p-5 bg-danger text-white">
+                        <h2 class="text-white">Sorry you have no Permission to edit this Memo :)</h2>
+                    </div>
+
+                {% endif %}
+            {% endif %}
+       </div>
+    </div>
+{% endblock %}
+
+

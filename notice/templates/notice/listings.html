@@ -1,0 +1,298 @@
+{% extends 'superior.html' %}
+{% load static notice_tags_filters humanize %}
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'dispatrace/css/flatpickr.min.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-8">
+			<h3>{{ header }}</h3>
+		</div>
+		<div class="col-3"> 
+			<a class="float-right add-color btn btn-success btn-info" hhref="{% url 'notice:listing-add' %}" data-toggle="modal" data-target="#addListing">
+				Add Category	
+			</a>
+		</div>
+	</div>	
+	<hr>
+	<p class="lead text-muted bg-white p-1">{{ sub_header }}</p>
+	<hr>
+	<div class="card-columns">
+		{% for listing in user_listings %}
+			<div class="card">
+				<div class="card-body bg-default">
+				    <h5 class="card-title">{{ listing.name }} 			
+						<a id="{{listing.pk}}" href="{% url 'notice:listing-edit' listing_id=listing.pk %}" data-edit-url="{% url 'notice:listing-edit' listing_id=listing.pk %}" class="listing text-danger float-right ml-3"  data-toggleeee="modal"  data-targettttt="#editListing" data-title="{{ listing.name }}" data-desc="{{ listing.description }}">
+							<i class="fa fa-pencil"></i>
+						</a>				
+						<a href="{% url 'notice:listing-delete' listing_id=listing.pk %}" class="text-danger float-right">
+							<i class="fa fa-close"></i>
+						</a>
+					</h5>
+					<hr>
+					{% notices_filter notices=listing expired=False as unexpired_notices %}
+				    {% for notice in unexpired_notices %}
+						<div class="card-body p-1"  data-toggle="tooltip" data-placement="top" title="Expiring: {{ notice.expiry }}">
+							<p class="card-text item-color text-white pl-2">
+								{{ notice.name }}
+								<span class="cardTextMore mr-2">
+									<a href="{% url 'notice:item-update' listing_id=listing.pk item_id=notice.pk %}" class="text-white">
+										<i class="fa fa-edit"></i>
+									</a>
+								</span>
+							</p>
+						</div>
+				    {% endfor %}
+					<a href="{% url 'notice:item-add' listing_id=listing.pk %}" class="card-link">+ add notice</a>
+					<!-- ITEM Modal -->
+					<div class="modal fade top-spacer" id="addItem{{listing.pk}}" tabindex="-1" role="dialog" aria-labelledby="addItem" aria-hidden="true">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content item-color">
+								<div style="padding:2rem;">
+									<form id="createItem" class="addItem{{listing.pk}} text-white" method='POST' action="{% url 'notice:item-add' listing_id=listing.pk %}">
+										{% csrf_token %}
+										<div class="form-group row">
+											<label for="name" class="col-3 col-form-label">Title</label>
+											<div class="col-9">
+												<input type="text" class="form-control" id="name" placeholder="item name">
+											</div>
+										</div>
+										<div class="form-group row">
+											<div id="editor"></div>
+											<label for="description" class="col-3 col-form-label">Description</label>
+											<div class="col-9">
+												<textarea rows='5' class="form-control editable" id="description" placeholder="Type your description here ..."></textarea>
+											</div>
+										</div>
+										<div class="form-group row">
+											<label for="name" class="col-3 col-form-label">Expiry</label>
+											<div class="col-9">
+												<div class=flatpickr>
+													<input type="text" id="expiry" placeholder="Select Date.." data-input> <!-- input is mandatory -->
+												
+													<a class="input-button" title="toggle" data-toggle>
+														<i class="icon-calendar"></i>
+													</a>
+												
+													<a class="input-button" title="clear" data-clear>
+														<i class="icon-close"></i>
+													</a>
+												</div>
+											</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-3">
+												Priority
+											</div>
+											<div class="col-9">
+												<div class="form-check form-check-inline">
+													<input class="form-check-input" type="radio" name="npriotity" id="inlineRadio1" value="Normal" checked="checked">
+													<label class="form-check-label" for="inlineRadio1">Normal</label>
+												</div>
+												<div class="form-check form-check-inline">
+													<input class="form-check-input" type="radio" name="npriotity" id="inlineRadio2" value="Moderate">
+													<label class="form-check-label" for="inlineRadio2">Moderate</label>
+												</div>
+												<div class="form-check form-check-inline">
+													<input class="form-check-input" type="radio" name="npriotity" id="inlineRadio3" value="Urgent">
+													<label class="form-check-label" for="inlineRadio3">Urgent</label>
+												</div>
+											</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-9 offset-3">												
+												<button class="btn btn-primary" type="submit">Submit</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% empty %}
+			<!-- <p class="text-danger text-center">
+				You have no Listings yet
+			</p> -->
+		{% endfor %}
+
+	</div>
+
+	<div class="card bg-warning">
+		<div class="card-body">
+			<h5 class="card-title">EXPIRED NOTICES</h5>
+			<hr>
+			<div class="row">
+				{% for listing in user_listings %}
+					{% notices_filter notices=listing expired=True as expired_notices %}
+					{% for notice in expired_notices %}
+						<div class="card-body p-1 col-6"  data-toggle="tooltip" data-placement="top" title="Expired: {{ notice.expiry|naturaltime}}">
+							<p class="card-text item-color text-white pl-2">
+								{{ notice.name }}
+								<span class="cardTextMore mr-2">
+									<a href="{% url 'notice:item-update' listing_id=listing.pk item_id=notice.pk %}" class="text-white">
+										<i class="fa fa-edit"></i>
+									</a>
+									<a href="{% url 'notice:item-delete' listing_id=listing.pk item_id=notice.pk %}" class="text-danger">
+										<i class="fa fa-close"></i>
+									</a>
+								</span>
+							</p>
+						</div>
+					{% endfor %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<!-- Listing Add Modal -->
+	<div class="modal fade top-spacer" id="addListing" tabindex="-1" role="dialog" aria-labelledby="addListing" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content listing-color">
+				<div  style="padding:2rem;">
+					<form id="createListing" class="text-white" method='POST' action="{% url 'notice:listing-add' %}">
+						{% csrf_token %}
+						<div class="form-group row">
+							<label for="name" class="col-3 col-form-label">Title</label>
+							<div class="col-9">
+								<input type="text" class="form-control" id="name" placeholder="Listing name">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="description" class="col-3 col-form-label">Description</label>
+							<div class="col-9">
+								<textarea class="form-control editable" id="description" placeholder="Type your description here ..."></textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-9 offset-3">												
+								<button class="btn btn-primary" type="submit">Submit</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Listing Add Modal -->
+	<div class="modal fade top-spacer" id="editListing" tabindex="-1" role="dialog" aria-labelledby="editListing" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content listing-color">
+					<div  style="padding:2rem;">
+						<form id="editListingForm" class="text-white" method='POST' action="">
+							{% csrf_token %}
+							<div class="form-group row">
+								<label for="name" class="col-3 col-form-label">Title</label>
+								<div class="col-9">
+									<input type="text" class="form-control title" id="name" placeholder="Listing name">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="description" class="col-3 col-form-label">Description</label>
+								<div class="col-9">
+									<textarea class="form-control editable" id="description" placeholder="Type your description here ..."></textarea>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-9 offset-3">												
+									<button class="btn btn-primary" type="submit">Submit</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'dispatrace/js/flatpickr.js' %}"></script>
+<script>
+	$(document).ready(function(){
+		flatpickr(".flatpickr", {
+			wrap: true,
+			altFormat: "F j, Y",
+			dateFormat: "Y-m-d",
+			minDate: "today",
+		});
+
+		// Submit Add Listing Form
+		$("form#createListing").on('submit', function(e){
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			var url = $(this).attr('action');
+			data = {
+				name : $(this).find("input#name").val(),
+				description: $(this).find("textarea#description").val(),
+			}
+			$.ajax({
+				method: "POST",
+				url: url,
+				data: data,
+				success: function(){
+					window.location.reload();
+					$('form#createListing')[0].reset();
+				},
+				error: function(){},
+			});
+		});
+		
+		// Submit Add Item Form
+		$("form.createItem").on('submit', function(e, hhref){
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			var clss = $(this).attr("class");
+			// var url = $("." + clss.toString()).attr("hhref");
+			data = {
+				name : $(this).find("input#name").val(),
+				description: $(this).find("textarea#description").val(),
+				expiry: $(this).find("input#expiry").val(),
+				priority: $("input[name='npriotity']:checked").val()
+			}
+			$.ajax({
+                method: "POST",
+                url: $(this).attr('action'),
+				data: data,
+                success: function(){
+					window.location.reload();
+				},
+                error: function(){},
+            });
+		});
+
+		// edit category / Listing  for editing
+		$('a.listing').on('click', function(){
+			var listing = $(this);
+			var modal = $('#editListing');			
+			modal.find('input.title').val(listing.attr('data-title'));
+			modal.find('textarea').val(listing.attr('data-desc'));
+			modal.find('form#editListingForm').attr('action', listing.attr('data-edit-url'))
+		});
+		$("form#editListingForm").on('submit', function(e, hhref){
+			e.preventDefault();
+			e.stopImmediatePropagation();	
+			data = {
+				title : $(this).find("input.title").val(),
+				description: $(this).find("textarea").val(),
+			}
+			console.log(data);
+			$.ajax({
+                method: "POST",
+                url: $(this).attr('action'),
+				data: data,
+                success: function(){
+					window.location.reload();
+				},
+                error: function(){},
+            });
+		});
+
+	});
+
+	</script>
+{% endblock %}

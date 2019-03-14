@@ -1,0 +1,32 @@
+{% extends 'superior.html' %}
+{% load static humanize memo_tags_filters  %}
+
+{% block content %}
+	<div class="container-fluid">
+        <span>{{has_view_powers}}</span>
+          
+        {% if memo.mem_type == "PVT" %}
+            {% if request.user|has_group:"Human Resources" or user in memo.recipients.all or user == memo.to or user == memo.sender %}
+            	{% include "memoir/detail_content.html" %}
+            {% else %}
+                <div class="text-danger text-center p-5 bg-danger text-white my-5">
+                    <h2 class="text-white">Sorry you have no Permission to view this Memo</h2>
+                </div>
+            {% endif %}
+        {% else %}
+            {% include "memoir/detail_content.html" %}
+        {% endif %}   
+
+	</div>  
+{% endblock %}
+
+{% block scripts %}
+
+    <script src="{% static 'dispatrace/js/memo-detail.js' %}"></script>
+    <script> 
+        $('button').on('click', function(e){
+                $(this).addClass('disabled');
+        });
+    </script>
+
+{% endblock %}
