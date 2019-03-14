@@ -26,7 +26,7 @@ SECRET_KEY = 'cd^p)6p15nokou5h+@w_=5n@=+@dq@_l*ke5*hxe_(u)^go=v4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['memo-dispatrace.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['dispatrace.herokuapp.com', 'localhost']
 
 
 # Application definition
