@@ -2,11 +2,12 @@
 import os
 from django.db import models
 import django_heroku 
+import dj_database_url
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SECRET_KEY = 'cd^p)6p15nokou5h+@w_=5n@=+@dq@_l*ke5*hxe_(u)^go=v4'
 DEBUG = True
-ALLOWED_HOSTS = ['dispatrace.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['dispatrace.herokuapp.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,16 +75,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dispatrace.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dispatrace',
-        'USER': 'aurthur',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -116,7 +109,7 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'dispatrace/static'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -161,3 +154,8 @@ SESSION_SECURITY_EXPIRE_AFTER=15*60
 SESSION_SECURITY_WARN_AFTER=13*60
 
 django_heroku.settings(locals())
+
+try:
+    del DATABASES['default']['OPTIONS']['sslmode']
+except Exception as e:
+    pass
