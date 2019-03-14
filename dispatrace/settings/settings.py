@@ -1,6 +1,7 @@
 
 import os
 from django.db import models
+import django_heroku 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'cd^p)6p15nokou5h+@w_=5n@=+@dq@_l*ke5*hxe_(u)^go=v4'
@@ -158,3 +159,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 SESSION_SECURITY_EXPIRE_AFTER=15*60
 SESSION_SECURITY_WARN_AFTER=13*60
+
+django_heroku.settings(locals())
