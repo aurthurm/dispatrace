@@ -5,7 +5,7 @@
 
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-md-4 profile-info widget">
+		<div class="col-md-6 profile-info widget">
 			<div class="stats-info-agileits {% if not object.active %}bg-danger{% endif %}">
 				<div class="stats-title">
 					<h4 class="text-center">
@@ -75,9 +75,89 @@
 					    </tbody>
 					</table>    
 				</div>
+				<div class="">
+					{% if request.user == object.user or request.user|has_group:"Password Resetor" %}
+						<button class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#PasswordChangeModal">Reset Password</button>
+					{% endif %}
+				</div>
 			</div>
 		</div>		
 	</div>
 </div>
 
-{% endblock %}    
+	<!-- password reset modal --> 
+	<div id="PasswordChangeModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="ForcePasswordChangeModal" aria-hidden="true">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content p-3">
+				<form id="passwordReset" action="{% url 'profiles:password-reset' %}">
+					<div class="form-group">
+						<label for="username">username</label>
+						<input type="text" class="form-control" id="username" value="{{object.user.username}}" readonly>
+					</div>
+					<div class="form-group">
+						<label for="password11">New Password</label>
+						<input type="password" class="form-control" id="password11" placeholder="Password New">
+					</div>
+					<div class="form-group">
+						<label for="password22">Password Confirm</label>
+						<input type="password" class="form-control" id="password22" placeholder="Password Confirm">
+					</div>
+				</form>
+				<div id="mess" class="p-2 d-none"></div>
+				<div class="modal-footer">
+					<button id="updatePasswordChange" type="button" class="btn btn-primary">Change Password</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}   
+
+{% block scripts %}
+<script>
+	$('#updatePasswordChange').on("click" ,function(e) {
+		e.preventDefault();
+		e.stopImmediatePropagation();
+
+		var button = $(this);
+		button.addClass("disabled");
+
+		var data = {};
+		var form = $('form#passwordReset');
+
+		var messages = $("div#mess");
+		messages.removeClass("bg-success");
+		messages.removeClass("bg-danger");
+		messages.removeClass("d-none");
+		messages.addClass("d-none");
+
+		data["username"] = form.find('input#username').val();
+		data["password1"] = form.find('input#password11').val();
+		data["password2"] = form.find('input#password22').val();
+		$.ajax({
+			url: form.attr("action"),
+			method: "post",
+			data: data,
+			success: function(res){
+				if (res.error){
+					messages.addClass("bg-danger");
+					button.removeClass("disabled");
+				}
+				else {
+					messages.addClass("bg-success"); 
+					window.setTimeout(function () { 						
+						if (res.relogin){
+							window.location.reload()
+						} else{
+							$('#PasswordChangeModal').modal('hide'); 
+						}						
+					}, 3000);                           
+				}
+				messages.removeClass("d-none");
+				messages.text(res.message);
+			},
+			error: function(err){}
+		});
+	});
+</script>
+{% endblock %}   

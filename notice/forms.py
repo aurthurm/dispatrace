@@ -1,4 +1,5 @@
 from django import forms
+from django.shortcuts import get_object_or_404
 from ajax_select.fields import AutoCompleteSelectField, AutoCompleteSelectMultipleField
 
 from .models import Notice, Listing
@@ -16,7 +17,9 @@ class NoticeForm(forms.ModelForm):
         if 'city' in self.data:
             try:
                 city_id = int(self.data.get('city'))
-                self.fields['office'].queryset = Office.objects.filter(city_id=city_id).order_by('name')
+                city = get_object_or_404(City, pk=city_id)
+                offices = city.offices.all().order_by('name')
+                self.fields['office'].queryset = offices
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
         elif self.instance.pk:
@@ -25,7 +28,9 @@ class NoticeForm(forms.ModelForm):
         if 'office' in self.data:
             try:
                 office_id = int(self.data.get('office'))
-                self.fields['department'].queryset = Department.objects.filter(office_id=office_id).order_by('name')
+                office = get_object_or_404(Office, pk=office_id)
+                departments = office.departments.all().order_by('name')
+                self.fields['department'].queryset = departments
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
         elif self.instance.pk:

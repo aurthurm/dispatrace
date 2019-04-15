@@ -59,9 +59,10 @@
                     <span id="fuelAddComment" class="badge badge-success" style="font-size: 1em !important;">ADD COMMENT</span>
                 </span>
                 {% endif %}
-                {% if 1 == 1 %}
+                {% can_assign fuel=fuel user=user as re_assignable %} 
+                {% if fuel.is_open and re_assignable %}
                 <span>
-                    <!-- <a class="badge badge-warning" style="font-size: 1em !important;" href="{% url 'fuel:fuel-reassign' fuel_id=fuel.pk %}">REASSIGN</a> -->
+                    <a class="badge badge-warning" style="font-size: 1em !important;" href="{% url 'fuel:fuel-reassign' fuel_id=fuel.pk %}">REASSIGN</a>
                 </span>
                 {% endif %}
             </div>

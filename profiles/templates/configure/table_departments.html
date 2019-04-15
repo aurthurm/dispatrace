@@ -1,3 +1,6 @@
+{% load memo_tags_filters  %}
+
+
 <table class="table" ui-jq="footable" ui-options='{
     "paging": {
     "enabled": true
@@ -9,7 +12,7 @@
     "enabled": true
     }}'>
     <thead>
-        {% if user.user_profile.has_admin_access %}
+        {% if request.user|has_group:"Administrator"  %}
             <tr>
                 <span>
                     <a class="text-dark btn btn-outline-info" href="{% url 'profiles:department-add' %}">ADD DEPARTMENT <span><i class="fa fa-plus"></i></span></a>
@@ -17,12 +20,9 @@
             </tr>
         {% endif %}
         <tr>
-            <th class="text-white">Country</th>    
-            <th class="text-white">City</th>
-            <th class="text-white">Office / Brach</th>
             <th class="text-white">Departments</th>
             <th class="text-white">Code</th>
-            {% if user.user_profile.has_admin_access %}
+            {% if request.user|has_group:"Administrator"  %}
                 <th class="text-white">EDIT</th>
             {% endif %}
 
@@ -31,12 +31,9 @@
     <tbody>
         {% for department in departments %}
             <tr>
-                <td class="text-white">{{ department.city.country.name }}</td>
-                <td class="text-white">{{ department.office.city.name }}</td>
-                <td class="text-white">{{ department.office.name }}</td>
                 <th class="text-white">{{ department.name }}</th>
                 <th class="text-white">{{ department.code }}</th>
-                {% if user.user_profile.has_admin_access %}
+                {% if request.user|has_group:"Administrator"  %}
                     <td>
                         <a class="text-danger" href="{% url 'profiles:department-edit' department_id=department.pk %}">
                             <i class="fa fa-edit"></i>

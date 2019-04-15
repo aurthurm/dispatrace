@@ -1,3 +1,6 @@
+{% load memo_tags_filters %}
+
+
 <table class="table" ui-jq="footable" ui-options='{
     "paging": {
     "enabled": true
@@ -9,7 +12,7 @@
     "enabled": true
     }}'>
     <thead>
-        {% if user.user_profile.has_admin_access %}
+        {% if request.user|has_group:"Administrator" %}
             <tr>
                 <span>
                     <a class="text-dark btn btn-outline-info" href="{% url 'profiles:level-add' %}">ADD LEVEL <span><i class="fa fa-plus"></i></span></a>
@@ -20,7 +23,7 @@
         <tr>
             <th class="text-white">LEVEL</th>   
             <th class="text-white">NAME</th>  
-            {% if user.user_profile.has_admin_access %}
+            {% if request.user|has_group:"Administrator"  %}
                 <th class="text-white">EDIT</th>
             {% endif %}
 
@@ -31,7 +34,7 @@
             <tr>
                 <td class="text-white">{{ level.level }}</td>
                 <td class="text-white">{{ level.name }}</td>
-                {% if user.user_profile.has_admin_access %}
+                {% if request.user|has_group:"Administrator"  %}
                     <td>
                         <a class="text-danger" href="{% url 'profiles:level-edit' level_id=level.pk %}">
                             <i class="fa fa-edit"></i>

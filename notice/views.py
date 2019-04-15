@@ -159,10 +159,12 @@ class NoticeDelete(LoginRequiredMixin, DeleteView):
 
 def load_offices(request):
     city_id = request.GET.get('city')
-    offices = Office.objects.filter(city_id=city_id).order_by('name')
+    city = get_object_or_404(City, pk=city_id)
+    offices = city.offices.all().order_by('name')
     return render(request, 'notice/city_dropdown_list_options.html', {'items': offices})
 
 def load_departments(request):
     office_id = request.GET.get('office')
-    departments = Department.objects.filter(office_id=office_id).order_by('name')
+    office = get_object_or_404(Office, pk=office_id)
+    departments = office.departments.all().order_by('name')
     return render(request, 'notice/department_dropdown_list_options.html', {'items': departments})

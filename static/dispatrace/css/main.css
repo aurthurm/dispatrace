@@ -110,6 +110,13 @@ li.username i {
   margin-left: 10px;
 }
 
+.username.dropdown .dropdown-toggle,
+.username.dropdown:hover,
+.username.dropdown .dropdown-toggle:hover {
+    background: transparent;
+    border: none;
+ }
+
 /* memos: ribbon
 -------------------------------------------------- */
 .memo-listing {

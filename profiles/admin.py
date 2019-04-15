@@ -11,6 +11,7 @@ class ProfileAdmin(admin.ModelAdmin):
 		'department',
 		'level',
 	]
+	search_fields = ('user__username',)
 
 admin.site.register(UserProfile, ProfileAdmin)
 admin.site.register(Level)

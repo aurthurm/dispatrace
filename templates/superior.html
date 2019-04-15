@@ -94,8 +94,21 @@
             <section id="main-content">
 
             	<section class="wrapper">
-                    {% block content %}
+                    {% if passord_force_reset %}               
+                        <li class="list-group-item list-group-item-danger mb-2">
+                            Please change your password now. <a data-toggle="modal" data-target="#ForcePasswordChangeModal">
+                                <span><b>CLICK HERE</b></span>
+                            </a>
+                        </li> 
+                    {% endif %}
+                                
+                    <ul class="messages list-group mb-2">
+                        {% for message in messages %}
+                            <li class="list-group-item list-group-item-info">{{ message }}</li> 
+                        {% endfor %} 
+                    </ul>
 
+                    {% block content %}
                     {% endblock %}
                 </section>
 
@@ -106,6 +119,29 @@
                     <p>© 2018 Dispatrace. | Dispatch and Trace Memos | Developed by <a href="http://www.icotech.co.zw" target='_blank' class="text-danger">ICOTECH </a> i.p.w <span class="text-danger">e4X Systems</span> </p>
                 </div>
             </div>  
+
+           <!-- password force reset modal --> 
+           <div id="ForcePasswordChangeModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="ForcePasswordChangeModal" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                  <div class="modal-content p-3">
+                        <form id="passwordForceReset" action="{% url 'pasword-force-reset' %}">
+                            <div class="form-group">
+                                <label for="password1">New Password</label>
+                                <input type="password" class="form-control" id="password1" placeholder="Password New">
+                            </div>
+                            <div class="form-group">
+                                <label for="password2">Password Confirm</label>
+                                <input type="password" class="form-control" id="password2" placeholder="Password Confirm">
+                            </div>
+                        </form>
+                        <div id="mess" class="p-2 d-none"></div>
+                        <div class="modal-footer">
+                          <button id="updatePasswordChangeForced" type="button" class="btn btn-primary">Update Password</button>
+                        </div>
+                  </div>
+                </div>
+            </div>
+
         </section>
 
         <script src="{% static 'dispatrace/js/popper.min.js' %}"></script>
@@ -123,6 +159,44 @@
         {% include 'session_security/all.html' %}
         <script>
             sessionSecurity.confirmFormDiscard = undefined;
+            $('#updatePasswordChangeForced').on("click" ,function(e) {
+                // $('#ForcePasswordChangeModal').modal('hide');
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                var button = $(this);
+                button.addClass("disabled");
+
+                var data = {};
+                var form = $('form#passwordForceReset');
+
+                var messages = $("div#mess");
+                messages.removeClass("bg-success");
+                messages.removeClass("bg-danger");
+                messages.removeClass("d-none");
+                messages.addClass("d-none");
+
+                data["password1"] = form.find('input#password1').val();
+                data["password2"] = form.find('input#password2').val();
+                $.ajax({
+                    url: form.attr("action"),
+                    method: "post",
+                    data: data,
+                    success: function(res){
+                        if (res.error){
+                            messages.addClass("bg-danger");
+                            button.removeClass("disabled");
+                        }
+                        else {
+                            messages.addClass("bg-success"); 
+                            window.setTimeout(function () { window.location.reload() }, 3000);                           
+                        }
+                        messages.removeClass("d-none");
+                        messages.text(res.message);
+                    },
+                    error: function(err){}
+                });
+            });
         </script>
     </body>
 </html>

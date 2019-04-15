@@ -14,6 +14,35 @@ from django.core import serializers
 from profiles.models import *
 from .forms import UserProfileForm, ProfileForm, ProfileUpdateForm
 
+def password_reset(request):
+	data = {}
+	data['relogin'] = False
+	data['error'] = False
+	passwords = request.POST
+	username = passwords.get('username', None)
+	pass_1 = passwords.get('password1', None)
+	pass_2 = passwords.get('password2', None)
+	print(f"{username} {pass_1} {pass_2}")
+	if pass_1 == pass_2:
+		try:
+			user = User.objects.get(username=username)
+			user.set_password(pass_2)
+			user.save()
+			profile = user.user_profile
+			profile.force_password_change = False
+			profile.save()
+			data['message'] = f"Success: Password for @{username}  was successfully changed"
+			if request.user == user:
+				data['relogin'] = True
+				data['message'] = "Success: Your password was successfully changed. You will be redirected for a re-login"
+		except Exception:
+			data['message'] = "This is weird. ==> User does not exist. Contact system developer for help. "
+			data['error'] = True
+	else:
+		data['message'] = "The Passwords you provided do not match. Try again" 
+		data['error'] = True
+	return JsonResponse(data)
+
 def paginate(request, unaginated):
 	page = request.GET.get('page', 1)
 
@@ -156,7 +185,7 @@ class CountryAdd(LoginRequiredMixin, CreateView):
 	fields = [
 		'name',
 	]
-	success_url = reverse_lazy('profiles:config-list')
+	success_url = reverse_lazy('profiles:config-list-countries')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -170,7 +199,7 @@ class CountryEdit(LoginRequiredMixin, UpdateView):
 	fields = [
 		'name',
 	]
-	success_url = reverse_lazy('profiles:config-list')
+	success_url = reverse_lazy('profiles:config-list-countries')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -184,8 +213,9 @@ class CityAdd(LoginRequiredMixin, CreateView):
 		'country',
 		'name',
 		'abbreviation',
+		'offices',
 	]
-	success_url = reverse_lazy('profiles:config-list')
+	success_url = reverse_lazy('profiles:config-list-cities')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -200,8 +230,9 @@ class CityEdit(LoginRequiredMixin, UpdateView):
 		'country',
 		'name',
 		'abbreviation',
+		'offices',
 	]
-	success_url = reverse_lazy('profiles:config-list')
+	success_url = reverse_lazy('profiles:config-list-cities')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -212,12 +243,12 @@ class OfficeAdd(LoginRequiredMixin, CreateView):
 	model = Office
 	template_name = 'configure/form.html'
 	fields = [
-		'country',
-		'city',
 		'name',
 		'code',
+		'country',
+		'departments'
 	]
-	success_url = reverse_lazy('profiles:config-list')
+	success_url = reverse_lazy('profiles:config-list-offices')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -229,12 +260,12 @@ class OfficeEdit(LoginRequiredMixin, UpdateView):
 	pk_url_kwarg = 'office_id'
 	template_name = 'configure/form.html'
 	fields = [
-		'country',
-		'city',
 		'name',
 		'code',
+		'country',
+		'departments'
 	]
-	success_url = reverse_lazy('profiles:config-list')
+	success_url = reverse_lazy('profiles:config-list-offices')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -245,13 +276,10 @@ class DepartmentAdd(LoginRequiredMixin, CreateView):
 	model = Department
 	template_name = 'configure/form.html'
 	fields = [
-		'country',
-		'city',
-		'office',
 		'name',
 		'code',
 	]
-	success_url = reverse_lazy('profiles:config-list')
+	success_url = reverse_lazy('profiles:config-list-departments')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -263,13 +291,10 @@ class DepartmentEdit(LoginRequiredMixin, UpdateView):
 	pk_url_kwarg = 'department_id'
 	template_name = 'configure/form.html'
 	fields = [
-		'country',
-		'city',
-		'office',
 		'name',
 		'code',
 	]
-	success_url = reverse_lazy('profiles:config-list')
+	success_url = reverse_lazy('profiles:config-list-departments')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -283,7 +308,7 @@ class LevelAdd(LoginRequiredMixin, CreateView):
 		'name',
 		'level',
 	]
-	success_url = reverse_lazy('profiles:config-list')
+	success_url = reverse_lazy('profiles:config-list-levels')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -298,7 +323,7 @@ class LevelEdit(LoginRequiredMixin, UpdateView):
 		'name',
 		'level',
 	]
-	success_url = reverse_lazy('profiles:config-list')
+	success_url = reverse_lazy('profiles:config-list-levels')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)

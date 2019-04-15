@@ -5,7 +5,7 @@ from django.conf import settings
 from ajax_select import urls as ajax_select_urls
 from django.conf.urls.static import static
 
-from dispatrace.views import signup, dashboard, dash_stats, active_notifications
+from dispatrace.views import signup, dashboard, dash_stats, active_notifications, force_pwd_reset
 
 admin.autodiscover()
 
@@ -19,6 +19,7 @@ urlpatterns = [
     path('notification-count', active_notifications, name='notify-count-active'),
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('accounts/force-password-reset/', force_pwd_reset, name='pasword-force-reset'),
     path('', dashboard, name='home'),
     path('dash-stats/', dash_stats, name='dash-stats'),
     path('profiles/', include('profiles.urls')),

@@ -8,48 +8,60 @@
         {% csrf_token %}
         {{ form.media }}
         <div class="form-row">
+            {% if form.fuel_type %}
             <div class="col form-group">
                 <div class="row"> 
                     <label class="col-4">Fuel Type</label>
                     <span class="col-8">{{ form.fuel_type }}</span>                    
                 </div>
             </div>
+            {% endif %}
+            {% if form.priority %}
             <div class="col form-group">
                 <div class="row">
                     <label class="col-4">Priority</label>
                     <span class="col-8">{{ form.priority }}</span>
                 </div>
             </div>
+            {% endif %}
         </div>
         <div class="form-row">
+            {% if form.origin %}
             <div class="col form-group">
                 <div class="row">
                     <label class="col-4">Origin</label>
                     <span class="col-8">{{ form.origin }}</span>
                 </div>
             </div>
+            {% endif %}
+            {% if form.destination %}
             <div class="col form-group">
                 <div class="row">
                     <label class="col-4">Destination</label>
                     <span class="col-8">{{ form.destination }}</span>
                 </div>
             </div>
+            {% endif %}
         </div>
         <div class="form-row">
+            {% if form.destination %}
             <div class="col form-group">
                 <div class="row">
                     <label class="col-2">Date Required</label>
                     <span class="col-10">{{ form.date_required }}</span>
                 </div>
             </div>
+            {% endif %}
         </div>
         <div class="form-row">
+            {% if form.destination %}
             <div class="col form-group">
                 <div class="row">
                     <label class="col-4">Volume (Litres)</label>
                     <span class="col-8">{{ form.amount }}</span>
                 </div>
             </div>
+            {% endif %}
             <div class="col form-group">
                 <div class="row">
                     <label class="col-4">Vehicle Reg</label>
@@ -74,10 +86,20 @@
         <div class="form-row">
             <div class="col form-group">
                 <div class="row">
+                    <label class="col-2">Plus Vehicle</label>
+                    <span class="col-1 pl-0 ml-0">{{ form.plus_vehicle }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            {% if form.destination %}
+            <div class="col form-group">
+                <div class="row">
                     <label class="col-2">Reason</label>
                     <span class="col-10">{{ form.reason }}</span>
                 </div>
             </div>
+            {% endif %}
         </div>
         <div class="form-group">
             <div class="row">

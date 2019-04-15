@@ -95,7 +95,9 @@ class Fuel(models.Model):
     registration = models.CharField(
         _('vehicle reg number'),
         max_length=255,
-        default=''
+        null=True,
+        blank=True,
+        default='',
     )
     # origin = models.ForeignKey(
     #     'profiles.City',
@@ -142,6 +144,10 @@ class Fuel(models.Model):
     )
     accepted = models.BooleanField(
         _('accepted'),
+        default = False
+    )
+    plus_vehicle = models.BooleanField(
+        _('plus vehicle'),
         default = False
     )
     archived = models.BooleanField(

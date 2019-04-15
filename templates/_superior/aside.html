@@ -20,7 +20,6 @@
                         <ul class="sub">
                             <li><a href="{% url 'fuel:request-fuel' %}">New Request</a></li>
                             <li><a href="{% url 'fuel:requests-listings' %}">Requests</a></li>
-                            <!-- <li><a href="{% url 'fuel:reports-fuel' %}">Fuel Summaries</a></li> -->
                             <li><a href="{% url 'fuel:fuel-archives' %}">Fuel Archives</a></li>
                         </ul>
                     </li>                    
@@ -40,12 +39,12 @@
                         </ul>
                     </li>
                     {% if request.user|has_group:"Administrator" %}
-                        <!-- <li class="sub-menu">
+                        <li class="sub-menu">
                             <a href="javascript:;">
                                 <i class=" fa fa-bar-chart-o"></i>
                                 <span>REPORTS</span>
                             </a>
-                        </li> -->
+                        </li>
                     {% endif %}
                     <li class="sub-menu">
                         <a href="javascript:;">

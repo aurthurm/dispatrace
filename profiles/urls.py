@@ -25,4 +25,5 @@ urlpatterns = [
     path('level/add', LevelAdd.as_view(), name='level-add'),
     path('level/<int:level_id>/edit', LevelEdit.as_view(), name='level-edit'),
     path('populate', od_populator, name='populate'),
+    path('password/reset', password_reset, name='password-reset'),
 ]

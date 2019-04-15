@@ -23,21 +23,49 @@ from notify.models import Notification
 def active_notifications(request):
     data = {}
     recipient = request.user
-    unread_and_active = Notification.objects.unread().filter(recipient=recipient)
-    active = Notification.objects.active().filter(recipient=recipient)
-    data['unread'] = unread_and_active.count()
-    data['active'] = active.count()
+    if not recipient.is_anonymous:
+        unread_and_active = Notification.objects.unread().filter(recipient=recipient)
+        active = Notification.objects.active().filter(recipient=recipient)
+        data['unread'] = unread_and_active.count()
+        data['active'] = active.count()
+    else:
+        pass
     return JsonResponse(data)
 
 @login_required
 def dashboard(request):
+    context = {}
+    try:
+        if request.user.user_profile.force_password_change:
+            context['passord_force_reset'] = True
+            # return redirect('django.contrib.auth.views.password_change')
+    except AttributeError: #No profile?
+        context['passord_force_reset'] = False    
+
     notices = Notice.objects.all()    
     yesterday = timezone.now() - timedelta(days=1)
     notices = notices.filter(expiry__gt=yesterday)
-    context={
-       'notices': notices 
-    }
+    context['notices'] = notices 
     return render(request, '_dashboard/main_dash.html', context=context)
+
+def force_pwd_reset(request):
+    data = {}
+    passwords = request.POST
+    pass_1 = passwords.get('password1', None)
+    pass_2 = passwords.get('password2', None)
+    if pass_1 == pass_2:
+        user = request.user
+        user.set_password(pass_2)
+        user.save()
+        profile = user.user_profile
+        profile.force_password_change = False
+        profile.save()
+        data['message'] = "Success: Your password was successfully changed. You will be redirected for a re-login"
+        data['error'] = False
+    else:
+        data['message'] = "The Passwords you provided do not match. Try again"
+        data['error'] = True
+    return JsonResponse(data)
 
 @login_required
 def signup_old(request):

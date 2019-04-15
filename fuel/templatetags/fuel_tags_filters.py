@@ -17,10 +17,18 @@ def fuel_urgency(*args, **kwargs):
     return priority
 
 @register.simple_tag
-def reassign(*args, **kwargs):
+def can_assign(*args, **kwargs):
     fuel = kwargs['fuel']
     user = kwargs['user']
-    return level_higher_than_last_commenter(user, memo) and memo.is_open
+    reassign = False
+    if fuel.is_open:
+        if user == fuel.requester or user == fuel.assessor or user == fuel.approver:
+            reassign = True
+        else:
+            reassign = False
+    else:
+        reassign = False
+    return reassign
  
 @register.filter(name='has_group') 
 def has_group(user, group_name):

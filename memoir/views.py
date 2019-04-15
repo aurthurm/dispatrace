@@ -163,7 +163,7 @@ class MemoSearchListView(LoginRequiredMixin, TemplateView):
 	def get(self, *args, **kwargs):
 		if self.request.is_ajax():
 			data = []
-			result = Memo.objects.all()
+			result = Memo.objects.filter(sent__exact=True)
 			query = self.request.GET.get('qry')
 			if query:
 				result = result.filter(

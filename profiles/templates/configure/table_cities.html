@@ -1,3 +1,5 @@
+{% load memo_tags_filters profile_tags_filters %}
+
 <table class="table" ui-jq="footable" ui-options='{
     "paging": {
     "enabled": true
@@ -9,7 +11,7 @@
     "enabled": true
     }}'>
     <thead>
-        {% if user.user_profile.has_admin_access %}
+        {% if request.user|has_group:"Administrator"  %}
             <tr>
                 <span>
                     <a class="text-dark btn btn-outline-info" href="{% url 'profiles:city-add' %}">ADD CITY <span><i class="fa fa-plus"></i></span></a>
@@ -17,24 +19,25 @@
             </tr>
             <hr>
         {% endif %}
-        <tr>
-            <th class="text-white">Country</th>    
+        <tr>  
             <th class="text-white">City</th>    
             <th class="text-white">Abbreviation</th>
+            <th class="text-white">Branches/offices</th>
             <th></th>
-            {% if user.user_profile.has_admin_access %}
+            {% if request.user|has_group:"Administrator"  %}
                 <th class="text-white">EDIT</th>
             {% endif %}
         </tr>
     </thead>
     <tbody>
         {% for city in cities %}
+            {% as_list no_list=city.offices.all as branches %}
             <tr>
-                <td class="text-white">{{ city.country.name }}</td>
                 <td class="text-white">{{ city.name }}</td>
                 <td class="text-white">{{ city.abbreviation }}</td>
+                <td class="text-white">{{ branches }}</td>
                 <th></th>
-                {% if user.user_profile.has_admin_access %}
+                {% if request.user|has_group:"Administrator"  %}
                     <td>
                         <a class="text-danger" href="{% url 'profiles:city-edit' city_id=city.pk %}">
                             <i class="fa fa-edit"></i>

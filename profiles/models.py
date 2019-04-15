@@ -19,26 +19,39 @@ class Country(models.Model):
     def __str__(self):
         return str(self.name)
 
-class City(models.Model):
+class Department(models.Model):
+    """
+        A branch or office have different departments and sections t operate from
+    """
     name = models.CharField(
-        _('city'),
+        _('name'),
         max_length=255,
         default=''
     )
-    abbreviation = models.CharField(
-        _('abbreviation'),
+    code = models.CharField(
+        _('code'),
         max_length=3,
         default=''
     )
-    country = models.ForeignKey(
-        Country,
-        on_delete=models.PROTECT,
-        default=''
-    )
+    # country = models.ForeignKey(
+    #     Country,
+    #     on_delete=models.PROTECT,
+    #     default=''
+    # )
+    # city = models.ForeignKey(
+    #     City,
+    #     on_delete=models.PROTECT,
+    #     default=''
+    # )
+    # office = models.ForeignKey(
+    #     Office,
+    #     on_delete=models.PROTECT,
+    #     default=''
+    # )
 
     class Meta:
-        verbose_name = _('city')
-        verbose_name_plural = _('cities')
+        verbose_name = _('department')
+        verbose_name_plural = _('departments')
 
     def __str__(self):
         return str(self.name)
@@ -63,31 +76,34 @@ class Office(models.Model):
         on_delete=models.PROTECT,
         default=''
     )
-    city = models.ForeignKey(
-        City,
-        on_delete=models.PROTECT,
-        default=''
-    )
+    # city = models.ForeignKey(
+    #     City,
+    #     on_delete=models.PROTECT,
+    #     default=''
+    # )
+    departments = models.ManyToManyField(
+            Department, 
+            related_name='office_departments',
+            blank=True,
+        )
 
     class Meta:
-        unique_together = ('name', 'city')
+        # unique_together = ('name', 'city')
         verbose_name = _('office')
         verbose_name_plural = _('offices')
 
     def __str__(self):
         return str(self.name)
 
-class Department(models.Model):
-    """
-        A branch or office have different departments and sections t operate from
-    """
+
+class City(models.Model):
     name = models.CharField(
-        _('name'),
+        _('city'),
         max_length=255,
         default=''
     )
-    code = models.CharField(
-        _('code'),
+    abbreviation = models.CharField(
+        _('abbreviation'),
         max_length=3,
         default=''
     )
@@ -96,23 +112,20 @@ class Department(models.Model):
         on_delete=models.PROTECT,
         default=''
     )
-    city = models.ForeignKey(
-        City,
-        on_delete=models.PROTECT,
-        default=''
-    )
-    office = models.ForeignKey(
-        Office,
-        on_delete=models.PROTECT,
-        default=''
-    )
+
+    offices = models.ManyToManyField(
+            Office, 
+            related_name='city_offices',
+            blank=True,
+        )
 
     class Meta:
-        verbose_name = _('department')
-        verbose_name_plural = _('departments')
+        verbose_name = _('city')
+        verbose_name_plural = _('cities')
 
     def __str__(self):
         return str(self.name)
+
 
 class Level(models.Model):
     """
@@ -142,6 +155,7 @@ class UserProfile(models.Model):
             related_name='user_profile', 
             on_delete=models.PROTECT
         )
+    force_password_change = models.BooleanField(default=True)
     title = models.CharField(
             max_length=255, 
             blank=True, 

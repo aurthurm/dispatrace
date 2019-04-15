@@ -31,5 +31,7 @@ class Command(BaseCommand):
         hr = self.get_perms_group(name='Human Resources')
         admin = self.get_perms_group(name='Administrator')
         admin = self.get_perms_group(name='Notice Creators')
+        admin = self.get_perms_group(name='Password Resetor')
         admin = self.get_perms_group(name='Auditors')
+        admin = self.get_perms_group(name='General')
         self.stdout.write(self.style.SUCCESS('DONE'))

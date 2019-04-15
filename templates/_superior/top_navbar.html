@@ -34,15 +34,21 @@
                 <li>
                 </li>
 
-                <li class="username ">
-                    <i class=" fa fa-user"></i> 
-                    {% if request.user.first_name and request.user.last_name %}
-                        {{ request.user.first_name }} {{ request.user.last_name }}
-                    {% else %}
-                        @{{ request.user.username }}
-                    {% endif %}
-                </li>
-               
+                <li class="username dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">            
+                            <i class=" fa fa-user"></i> 
+                            {% if request.user.first_name and request.user.last_name %}
+                                {{ request.user.first_name }} {{ request.user.last_name }}
+                            {% else %}
+                                @{{ request.user.username }}
+                            {% endif %}
+                        </a>
+                        <ul id="userMenuDrop" class="dropdown-menu">
+                            <li>
+                                <a href="{{ request.user.user_profile.get_absolute_url }}" class="p-2">Profile</a>
+                            </li>
+                        </ul>
+                    </li>
             </ul>
             <!--search & user info end-->
         </div>

@@ -13,7 +13,7 @@ class FuelForm(forms.ModelForm):
     class Meta:
         model = Fuel
         fields = (
-            'fuel_type', 'priority', 'origin', 'destination', 'date_required', 'amount', 'reason', 'registration', 'assessor', 'approver'
+            'fuel_type', 'priority', 'origin', 'destination', 'date_required', 'amount', 'reason', 'registration', 'assessor', 'approver', 'plus_vehicle',
         )
         widgets = {
           'reason': forms.Textarea(attrs={'rows':2, 'cols':15}),
@@ -31,7 +31,10 @@ class FuelReasignForm(forms.ModelForm):
 
     class Meta:
         model = Fuel
-        fields = ('assessor', 'approver', )
+        fields = ('registration', 'assessor', 'approver', 'plus_vehicle',)
+        exclude = (
+            'fuel_type', 'priority', 'origin', 'destination', 'date_required', 'amount', 'reason',
+        )
 
     assessor = AutoCompleteSelectField('users', required=False, help_text=None)
     approver = AutoCompleteSelectField('users', required=False, help_text=None)
