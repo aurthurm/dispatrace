@@ -14,5 +14,6 @@ urlpatterns = [
     path('request/<int:fuel_id>/edit', FuelUpdate.as_view(), name='fuel-edit'),
     path('request/<int:fuel_id>/close', close_request, name='close-request'),
     path('request/<int:fuel_id>/detail/add-comment', fuel_comment, name='fuel-add-comment'),
+    path('request/<int:fuel_id>/<int:comment_id>/edit-comment', fuel_comment_edit, name='fuel-edit-comment'),
     path('request/<int:fuel_id>/reassign', FuelReassign.as_view(), name='fuel-reassign'),
 ]

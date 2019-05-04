@@ -6,7 +6,9 @@
     <div class="col-4">
         <div class="card {% fuel_urgency fuel=object %}" style="width: 18rem;">
             <div class="card-header">
-                Request for {{object.fuel_type}} 
+                <span> Request for {{object.fuel_type}} <br />
+                    {% if object.plus_vehicle %} and a vehicle {% endif %}
+                </span>               
                 <span class="float-right">
                         {% fuel_status fuel=fuel as status %}
                         {{status|safe}} 
@@ -29,7 +31,20 @@
                 </p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">By:  @{{object.requester}} <br/>DEPT: {{object.requester.user_profile.department }}<br/>On: {{object.date_requested}} <br /> V REG: {{object.registration}} </li>
+                <li class="list-group-item">
+                    By:  @{{object.requester}} : 
+                    {{object.requester.first_name }} {{object.requester.last_name }} <br/>
+                    DEPT: {{object.requester.user_profile.department }} <br/>
+                    {% if object.requester.user_profile.phone %}
+                        PH: {{object.requester.user_profile.phone}}
+                    {% endif %}
+                    {% if object.requester.user_profile.cell %}
+                        <br />  CELL: {{object.requester.user_profile.phone}}
+                    {% endif %}
+                    <br/>
+                    On: {{object.date_requested}} <br /> 
+                    V REG: {{object.registration}} 
+                </li>
             </ul>
             <div class="card-body">
                 <blockquote class="blockquote mb-0">
@@ -94,13 +109,22 @@
             </div>
             <div class="col-12 mt-5">
                 {% for comment in fuel.comment_fuel.all %}
+                {% can_edit_comment user=user fuel=fuel comment=comment as can_edit_comm %}
                     <div class="row mb-4">
                         <div class="col-3">
                         <span class="badge badge-info" style="font-size: 1em !important;">@{{comment.commenter}}</span> <br>
                         <span class="" style="font-size: 0.525em !important;">{{comment.timestamp}}</span>
                         </div>
                         <div class="col-9">
-                            {{comment.comment}}
+                            {{comment.comment}}                            
+                            <span class="float-right mr-2">
+                                {% if can_edit_comm %}
+                                    <span id="editComment" class="bg-white p-1 text-dark mr-2 lead comment-href mx-4" data-get-href="{% url 'fuel:fuel-edit-comment' fuel_id=fuel.pk comment_id=comment.pk %}">
+                                        Edit <i class="fa fa-edit mr-2"></i>
+                                    </span>
+                                {% endif %}
+                            </span>
+                            {% include "fuel/edit_comment_form.html" %}
                         </div>
                     </div>
                 {% endfor %}
@@ -109,7 +133,7 @@
                 <hr>
                 <span class="fuel-close-messages p-2 mb-4"></span>
                 {% can_approve fuel=fuel user=user as c_approve %} 
-                {% if user == fuel.approver and fuel.is_open and c_approve %}
+                {% if user == fuel.approver and fuel.is_open and c_approve and fuel.registration is not None %}
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="fuel-acceptance" id="inlineRadio1" value="accepted" checked="checked">
                     <label class="form-check-label" for="inlineRadio1">Accept</label>
@@ -133,7 +157,8 @@
                 $('#fuel-comment').toggle('slow')
             });
 
-            $('form').on('submit', function(e){
+            // Submit Fuel Comment
+            $('form#FuelForm').on('submit', function(e){
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 var messages_area = $(".fuel-messages");
@@ -161,6 +186,7 @@
                 })
             });
 
+            // Close Fuel Request
             $('#close-fuel').on('click', function(e){
                 e.preventDefault();
                 e.stopImmediatePropagation();
@@ -187,11 +213,67 @@
                         window.setTimeout(function () { window.location.reload() }, 2000);
                     },
                     error: function(err){
-                        console.log(err)
                     }
                 })
 
             });
+
+
+    // Comment Edit/Update: GET
+    $("span.comment-href").on('click', function (e) {
+        var getURL = $(this).attr('data-get-href');
+        $.ajax({
+            method: "GET",
+            url: getURL,
+            data: {},
+            success: function (res, getURL) {
+                // console.log(res);
+                $(res.form_id).slideToggle('slow');
+                $(res.form_id.concat(" textarea")).html(res.comment);
+            },
+            error: function () { },
+        });
+    });
+
+    // Comment Edit/Update: POST
+    $("form.fuel-comment-form").on('submit', function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        var postURL = $(this).attr('action');
+        var comment_new = $(this).find('textarea#comment').val();
+        var password_confirm = $(this).find('#password_confirm').val();
+        var messages_area = $(this).siblings("div.messages");
+
+        $.ajax({
+            method: "POST",
+            url: postURL,
+            dataType: 'json',
+            data:{
+                comment: comment_new,
+                password_confirm: password_confirm,
+            },
+            success: function (res) {
+                if (res.pass_passed === 'yes') {
+                    $form.hide();
+                    messages_area.removeClass('bg-danger');
+                    messages_area.addClass('bg-success');
+                    messages_area.html('');
+                    messages_area.html(res.success_message);
+                    window.setTimeout(function () { window.location.reload() }, 1000);
+                } else {
+                    messages_area.html(res.success_message); 
+                    messages_area.addClass('bg-danger');
+                }
+            },
+            error: function () { },
+        });
+
+    });
+
+
+
+
+
 
         })
     </script>  

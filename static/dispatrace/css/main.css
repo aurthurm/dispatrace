@@ -350,3 +350,12 @@ ul.top-menu > li:hover > a {
 .badge.badge-2{
   top:  10px !important;
 }
+
+.signup-help {
+  float: left;
+}
+
+.signup-help ul {
+  text-align: left !important;
+  list-style: none;
+}

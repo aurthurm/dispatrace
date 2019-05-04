@@ -1,0 +1,21 @@
+<form id="comment-{{ comment.pk }}" class="editForm fuel-comment-form mt-4" method='POST' action='{% url "fuel:fuel-edit-comment" fuel_id=fuel.pk comment_id=comment.pk %}' style="display:none;">
+    {% csrf_token %}
+	<div class="row">
+	    <!-- <label for="comment" hidden>Comment</label> -->
+	    <div class="col-12">
+	        <textarea class="form-control" id="comment" rows="3"></textarea>
+	    </div>
+	</div>
+	<div class="row my-3">
+		<div class="col-">
+			 <label for="password_confirm" >Password</label>
+		</div>
+	    <div class="col-4 ">
+	        <input type="password" class="form-control" id="password_confirm" placeholder="Password">
+	    </div>
+	    <div class="col-2">
+	        <button type="submit" class="btn btn-info">Commit Changes</button>
+	    </div>
+	</div>
+
+</form>

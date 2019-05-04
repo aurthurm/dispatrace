@@ -20,11 +20,11 @@
             {% csrf_token %}
             {% for field in registration_form %}
             <div class="form-group row">
-                <label for="staticEmail" class="col-3 col-form-label">{{ field.label_tag }}</label>
+                <label for="staticEmail" class="col-4 col-form-label">{{ field.label_tag }}</label>
                 <div class="col-8">
                     {{ field }}
                     {% if field.help_text %}
-                    <!-- <small style="color: grey">{{ field.help_text }}</small> -->
+                    <!-- <small style="color: white" class="signup-help">{{ field.help_text }}</small> -->
                     {% endif %}
                     {% for error in field.errors %}
                         <div class="alert alert-danger" role="alert">                            
@@ -35,8 +35,8 @@
             </div>
             {% endfor %}
             <div class="form-group row">
-                <div class="col-2 offset-8">
-                    <button type="submit" class="btn btn-md btn-primary">Sign Up</button>
+                <div class="col-8 offset-4">
+                    <button id="createUser" type="submit" class="btn btn-md btn-primary btn-block disabled">Sign Up</button>
                 </div>
             </div>
         </form>  
@@ -44,4 +44,33 @@
       </div>
       </div>      
 
+{% endblock %}
+
+{% block scripts %}
+
+
+<script type="text/javascript">
+  $('#id_password2').on('keyup', function(e){
+    var pass2 = $(this).val(),
+        pass1 = $('#id_password1').val();
+        if (pass2.length > 4) {
+          if (pass1 === pass2) {
+            $('button#createUser').removeClass('disabled');
+          } else {
+            $('button#createUser').addClass('disabled');
+          }          
+        }
+  }); 
+  $('#id_password1').on('keyup', function(e){
+    var pass1 = $(this).val(),
+        pass2 = $('#id_password2').val();
+        if (pass2.length > 4) {
+          if (pass1 === pass2) {
+            $('button#createUser').removeClass('disabled');
+          } else {
+            $('button#createUser').addClass('disabled');
+          }          
+        }
+  });
+</script>
 {% endblock %}

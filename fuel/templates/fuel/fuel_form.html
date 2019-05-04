@@ -4,7 +4,7 @@
 <div class="container bg-info py-4">
     <h4 class="text-uppercase">CREATE A FUEL REQUEST</h4>
     <hr><br>
-    <form method="POST" class="form-horizontal" action="">
+    <form id="FuelForm" method="POST" class="form-horizontal" action="">
         {% csrf_token %}
         {{ form.media }}
         <div class="form-row">

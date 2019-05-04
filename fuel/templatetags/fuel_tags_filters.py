@@ -66,7 +66,31 @@ def can_comment(*args, **kwargs):
             return False
     else:
         return False
-            
+
+@register.simple_tag
+def can_edit_comment(*args, **kwargs):
+    comment = kwargs['comment']
+    fuel = kwargs['fuel']
+    user = kwargs['user']
+    if fuel.is_open == True:
+        if user == fuel.assessor or user == fuel.approver: 
+            # is user == last commenter then edit.
+            if fuel.comment_fuel.all().count() != 0:
+                last_commenter = fuel.comment_fuel.all().latest().commenter
+                if user == last_commenter:
+                    if last_commenter == comment.commenter:
+                        return True
+                    else:
+                        return False
+                else:
+                    return False
+            else:
+                return False
+        else:
+            return False
+    else:
+        return False
+
 @register.simple_tag
 def can_approve(*args, **kwargs):
     fuel = kwargs['fuel']

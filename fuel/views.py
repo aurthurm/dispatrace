@@ -221,3 +221,36 @@ def fuel_comment(request, fuel_id):
 
     data['success_message'] = 'Comment was successfully submitted'
     return JsonResponse(data)
+
+def fuel_comment_edit(request, fuel_id, comment_id):
+    data = {}
+    if request.method == 'POST':
+        comment = get_object_or_404(Comment, pk=comment_id)
+        new_comment = request.POST.get('comment')
+        password_conf = request.POST.get('password_confirm')
+        print(new_comment)
+        print(password_conf)
+        _user = authenticate(username=request.user.username, password=password_conf)
+
+        if _user == request.user:
+            data['pass_passed'] = 'yes'
+        else:           
+            data['success_message'] = 'Wrong Password. Cant Submit Comment'
+            data['pass_passed'] = 'no'
+            return JsonResponse(data)
+
+        comment.comment = new_comment
+        comment.save()
+        data['success_message'] = "Comment Successfully updated"
+        return JsonResponse(data)
+
+    if request.method == 'GET':
+        comment = get_object_or_404(Comment, pk=comment_id)
+        c_id = '#comment-' + str(comment_id)
+        form_id = 'form#comment-' + str(comment_id)
+        data['comment'] = comment.comment
+        data['comment_id'] = c_id
+        data['form_id'] = form_id
+        # data['comment_form'] = render_to_string('fuel/edit_comment_form.html', {'form_id':form_id, 'memo_id':memo_id, 'comment_id':comment_id }, request=request)
+        return JsonResponse(data)
+
