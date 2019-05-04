@@ -101,6 +101,12 @@
 			{% endif %}
 		{% endif %}
 
+ 		{% if user == memo.sender and memo.sent == False %}
+		<a href="{% url 'memoir:memo-delete' memo_id=memo.pk memo_slug=memo.slug %}" class="btn btn-danger text-white">
+			DELETE THIS DRAFT MEMO
+		</a>
+		{% endif %}
+
 		<!-- Audit Trail Modal -->
 
 		<!-- Button trigger modal -->

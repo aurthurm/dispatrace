@@ -14,6 +14,7 @@ urlpatterns = [
     path('memo/<int:memo_id>/<slug:memo_slug>', MemoDetail.as_view(), name='memo-detail'),
     path('create-new', MemoCreate.as_view(), name='create-memo'),
     path('memo/<int:memo_id>/<slug:memo_slug>/edit', MemoUpdate.as_view(), name='memo-edit'),
+    path('memo/<int:memo_id>/<slug:memo_slug>/delete', MemoDelete.as_view(), name='memo-delete'),
     path('memo/<int:memo_id>/<slug:memo_slug>/reassign', MemoReassign.as_view(), name='memo-reassign'),
     path('memo/<int:memo_id>/<slug:memo_slug>/send', MemoSend, name='memo-send'),
     path('memo/<int:memo_id>/<slug:memo_slug>/close', MemoClose, name='memo-close'),

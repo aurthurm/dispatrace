@@ -6,8 +6,8 @@
     <div class="col-4">
         <div class="card {% fuel_urgency fuel=object %}" style="width: 18rem;">
             <div class="card-header">
-                <span> Request for {{object.fuel_type}} <br />
-                    {% if object.plus_vehicle %} and a vehicle {% endif %}
+                <span> Request for {{object.fuel_type}} 
+                    {% if object.plus_vehicle %}<br /> and a vehicle {% endif %}
                 </span>               
                 <span class="float-right">
                         {% fuel_status fuel=fuel as status %}

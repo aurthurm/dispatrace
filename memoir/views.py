@@ -57,6 +57,12 @@ class MemoUpdate(LoginRequiredMixin, UpdateView):
 		context['formTitle'] = "Edit Memo"
 		return context
     
+class MemoDelete(LoginRequiredMixin, DeleteView):
+	model = Memo
+	pk_url_kwarg = 'memo_id'
+	slug_url_kwarg = 'memo_slug'
+	success_url = "/"
+    
 class MemoReassign(LoginRequiredMixin, UpdateView):
 	model = Memo
 	pk_url_kwarg = 'memo_id'

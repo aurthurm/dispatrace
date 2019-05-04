@@ -19,6 +19,7 @@
 	<hr>
 	<div class="card-columns">
 		<form method="post">{% csrf_token %}
+		    <button onclick="window.history.back();" class="btn btn-default" type="button">Cancel</button>
 		    <input type="submit" value="Confirm" class="btn btn-md btn-warning">
 		</form>
 	</div>
