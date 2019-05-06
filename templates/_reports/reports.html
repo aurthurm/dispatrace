@@ -1,0 +1,199 @@
+{% extends 'superior.html' %}
+{% load static %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+	{% breadcrumb "Home" "Reports" %}
+{% endblock %}
+
+{% block content %}
+
+    <section class="d-reports">
+        <div class="row">
+            <div class="col-3"><h3>Dispatrace Reports</h3></div>
+			<div class="col-9">
+				<form id="d-reports" class="form-inline" action="{% url 'dispatrace-reports' %}" data-offices-url="{% url 'notice:ajax_load_offices' %}" data-departments-url="{% url 'notice:ajax_load_departments' %}">
+					<div class="form-group mb-2">
+						<label for="city" class="sr-only">City</label>
+						<select id="city" class="form-control">
+							<option selected value="">City...</option>
+							{% for city in cities %}
+								<option value="{{city.pk}}" >{{city.name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="form-group mb-2 mx-1">
+						<label for="office" class="sr-only">Office</label>
+						<select id="office" class="form-control">
+							<option selected value="">Office...</option>
+							<option>...</option>
+						</select>
+					</div>
+					<div class="form-group mb-2">
+						<label for="department" class="sr-only">Department</label>
+						<select id="department" class="form-control">
+							<option selected value="">Department...</option>
+							<option>...</option>
+						</select>
+					</div>
+					<button id="get-d-reports" type="submit" class="btn btn-warning d-inline mb-2 ml-2">GENERATE REPORT</button>
+				</form>
+			</div>
+        </div>        
+        <hr>
+
+        <section class="row">
+            <div class="col-12 report-heading">
+                <h3>Memorandums:</h3>            
+            </div>
+            <div id="memo-open" class="col">
+                <h4>Open</h4>
+                <p>...</p>
+            </div>
+            <div  id="memo-closed" class="col">
+                <h4>Closed</h4>
+                <p>...</p>
+            </div>
+            <div id="memo-archived" class="col">
+                <h4>Archived</h4>
+                <p>...</p>
+            </div>
+            <div id="memo-drafts" class="col">
+                <h4>Drafts</h4>
+                <p>...</p>
+            </div>
+            <div id="memo-private" class="col">
+                <h4>Private</h4>
+                <p>...</p>
+            </div>
+        </section>
+        <hr>
+
+        <section class="row">
+            <div class="col-12 report-heading">
+                <h3>Fuel:</h3>            
+            </div>
+            <div id="fuel-open" class="col">
+                <h4>Open</h4>
+                <p>...</p>
+            </div>
+            <div id="fuel-closed" class="col">
+                <h4>Closed</h4>
+                <p>...</p>
+            </div>
+            <div id="fuel-archived" class="col">
+                <h4>Archived</h4>
+                <p>...</p>
+            </div>
+            <div id="fuel-vehicle" class="col">
+                <h4>With Vehicle</h4>
+                <p>...</p>
+            </div>
+            <div id="fuel-declined" class="col">
+                <h4>Declined</h4>
+                <p>...</p>
+            </div>
+            <div id="fuel-approved" class="col">
+                <h4>Approved</h4>
+                <p>...</p>
+            </div>
+        </section>    
+        <hr>
+
+        <section class="row">
+            <div class="col-12 report-heading">
+                <h3>Notices:</h3>            
+            </div>
+            <div id="notice-active" class="col">
+                <h4>Active</h4>
+                <p>...</p>
+            </div>
+            <div id="notice-expired" class="col">
+                <h4>Expired</h4>
+                <p>...</p>
+            </div>
+            <div id="notice-total" class="col">
+                <h4>Total</h4>
+                <p>...</p>
+            </div>
+        </section>
+
+    </section>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script> 
+
+        $("#city").change(function () {
+            var url = $("form").attr("data-offices-url");  // get the url of the `load_cities` view
+            var cityId = $(this).val();  
+            // get the selected country ID from the HTML input
+            $.ajax({                            // initialize an AJAX request
+                url: url,                       // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'city': cityId              // add the country id to the GET parameters
+                },
+                success: function (data) {      // `data` is the return of the `load_cities` view function
+                    $("#office").html(data); // replace the contents of the city input with the data that came from the server
+                    $("#department").html("<option selected>-----------</option>");
+                }
+            });
+        });
+        $("#office").change(function () {
+            var url = $("form").attr("data-departments-url");  // get the url of the `load_cities` view
+            var officeId = $(this).val();         // get the selected country ID from the HTML input
+
+            $.ajax({                            // initialize an AJAX request
+                url: url,                       // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'office': officeId              // add the country id to the GET parameters
+                },
+                success: function (data) {      // `data` is the return of the `load_cities` view function
+                    $("#department").html(data); // replace the contents of the city input with the data that came from the server
+                }
+            });
+
+        });
+
+        $("form#d-reports").on('submit', function(e){
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var data = {};
+            data['city'] = $(this).find("select#city").val().toString();
+            data['department'] = $(this).find("select#department").val().toString();
+            data['office'] = $(this).find("select#office").val().toString();
+
+           $.ajax({
+                method: "get",
+                url: $(this).attr('data-url'),
+                data: data,
+                success: function (res) {
+                    console.log(res);
+                    // Load Notices 
+                    $("#notice-active p").html(res.notice.active);
+                    $("#notice-expired p").html(res.notice.expired);
+                    $("#notice-total p").html(res.notice.total);
+                    // Load Fuels 
+                    $("#fuel-open p").html(res.fuel.open);
+                    $("#fuel-closed p").html(res.fuel.closed);
+                    $("#fuel-archived p").html(res.fuel.archived);
+                    $("#fuel-vehicle p").html(res.fuel.vehicle);
+                    $("#fuel-approved p").html(res.fuel.approved);
+                    $("#fuel-declined p").html(res.fuel.declined);
+                    // Load Fuels 
+                    $("#memo-open p").html(res.memo.open);
+                    $("#memo-closed p").html(res.memo.closed);
+                    $("#memo-archived p").html(res.memo.archived);
+                    $("#memo-drafts p").html(res.memo.drafts);
+                    $("#memo-private p").html(res.memo.private);
+                },
+                error: function (res) {},
+            });
+
+        });
+
+    </script>
+
+{% endblock %}

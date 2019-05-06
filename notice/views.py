@@ -130,8 +130,6 @@ class NoticeUpdate(LoginRequiredMixin, UpdateView):
 		_city = str(self.request.POST.get('city')).strip()
 		_office = str(self.request.POST.get('office')).strip()
 		_department = str(self.request.POST.get('department')).strip()
-		print(f"city {_city}, office {_office}, department {_department}")
-		print(self.request.POST)
 		if len(_city) is not 0:
 			form.instance.city = get_object_or_404(City, pk=int(_city))
 			if len(_office) is not 0:

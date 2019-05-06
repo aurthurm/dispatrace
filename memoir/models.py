@@ -96,18 +96,18 @@ class Content(models.Model):
     class Meta:
         abstract=True
 
+PUBLIC = 'PUB'
+PRIVATE = 'PVT'
+CHOICES = (
+    (PUBLIC, _('Public')),
+    (PRIVATE, _('Private')),
+)
 class Type(models.Model):
     """
         Determines whether the memo being created is public or private.
         Public Memos are seen by everyone. 
         Private Memos are seen only by the sender and selected recipinet(s)
     """
-    PUBLIC = 'PUB'
-    PRIVATE = 'PVT'
-    CHOICES = (
-        (PUBLIC, _('Public')),
-        (PRIVATE, _('Private')),
-    )
     mem_type = models.CharField(
         _('memo type'),
         max_length=10,

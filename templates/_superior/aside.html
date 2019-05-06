@@ -11,18 +11,7 @@
                                 <span>DASHBOARD</span>
                             </a>
                         </li>
-                    {% endif %}
-                    <li class="sub-menu" >
-                        <a href="javascript:;">
-                            <i class="fa fa-car"></i>
-                            <span>FUEL</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a href="{% url 'fuel:request-fuel' %}">New Request</a></li>
-                            <li><a href="{% url 'fuel:requests-listings' %}">Requests</a></li>
-                            <li><a href="{% url 'fuel:fuel-archives' %}">Fuel Archives</a></li>
-                        </ul>
-                    </li>                    
+                    {% endif %}                    
                     <li class="sub-menu">
                         <a href="javascript:;">
                             <i class="fa fa-book"></i>
@@ -38,13 +27,24 @@
                             <li class="{{ search_active_class }}"><a href="{% url 'memoir:memo-search' %}">Search</a></li>
                         </ul>
                     </li>
-                    {% if request.user|has_group:"Administrator" %}
-                   <!--      <li class="sub-menu">
-                            <a href="javascript:;">
-                                <i class=" fa fa-bar-chart-o"></i>
-                                <span>REPORTS</span>
+                    <li class="sub-menu" >
+                        <a href="javascript:;">
+                            <i class="fa fa-car"></i>
+                            <span>FUEL</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="{% url 'fuel:request-fuel' %}">New Request</a></li>
+                            <li><a href="{% url 'fuel:requests-listings' %}">Requests</a></li>
+                            <li><a href="{% url 'fuel:fuel-archives' %}">Fuel Archives</a></li>
+                        </ul>
+                    </li>
+                    {% if request.user|has_group:"Notice Creators" %}
+                        <li>
+                            <a href="{% url 'notice:notice-listings' %}">
+                                <i class="fa fa-bell"></i>
+                                <span>NOTICES MANAGER</span>
                             </a>
-                        </li> -->
+                        </li>
                     {% endif %}
                     <li class="sub-menu">
                         <a href="javascript:;">
@@ -69,11 +69,11 @@
                             </ul>
                         </li>
                     {% endif %}
-                    {% if request.user|has_group:"Notice Creators" %}
-                        <li>
-                            <a href="{% url 'notice:notice-listings' %}">
-                                <i class="fa fa-bell"></i>
-                                <span>NOTICES MANAGER</span>
+                    {% if request.user|has_group:"Administrator" %}
+                        <li class="sub-menu">
+                            <a href="{% url 'dispatrace-reports' %}">
+                                <i class=" fa fa-bar-chart-o"></i>
+                                <span>REPORTS</span>
                             </a>
                         </li>
                     {% endif %}

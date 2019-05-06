@@ -5,7 +5,7 @@ from django.conf import settings
 from ajax_select import urls as ajax_select_urls
 from django.conf.urls.static import static
 
-from dispatrace.views import signup, dashboard, dash_stats, active_notifications, force_pwd_reset
+from dispatrace.views import signup, dashboard, dash_stats, active_notifications, force_pwd_reset, Reports
 
 admin.autodiscover()
 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('memos/', include('memoir.urls')),
     path('fuel/', include('fuel.urls')),
     path('notices/', include('notice.urls')),
+    path('reports/', Reports.as_view(), name='dispatrace-reports'),
 ]
 
 #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
