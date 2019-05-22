@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.http import JsonResponse, HttpResponse
+import uuid 
 
 from profiles.models import UserProfile
 
@@ -34,13 +35,13 @@ def get_ref_number(user):
         data['profile-complete'], data['profile-message'] = "no", "Profile Incomplete! Check Office Code"
         return JsonResponse(data)
  
-    # Extract from datetime: <year><month><day><hour><minute>
+    # Extract from datetime: <year><month><day> # + <hour><minute>
     list_date = list(str(datetime.now()))
-    slices = list_date[:4] + list_date[5:7] + list_date[8:10] + list_date[11:13] + list_date[14:16]
+    slices = list_date[:4] + list_date[5:7] + list_date[8:10] # + list_date[11:13] + list_date[14:16]
     time_code = ""
     for _slice in slices:
         time_code += _slice
 
-    ref_num =  'M-' + abbr + o_code + d_code + time_code
+    ref_num =  'M-' + abbr + o_code + d_code + time_code + '-' + uuid.uuid4().hex[:3].upper()
 
     return ref_num

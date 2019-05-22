@@ -22,6 +22,7 @@
                     
                 </li>
                 <li class="list-group-item">Volume: {{object.amount}} litres</li>
+                <li class="list-group-item">V REG: {{object.registration}} </li>   
                 <li class="list-group-item">Date Required: {{object.date_required}}</li>
             </ul>
             <div class="card-body">
@@ -42,8 +43,7 @@
                         <br />  CELL: {{object.requester.user_profile.phone}}
                     {% endif %}
                     <br/>
-                    On: {{object.date_requested}} <br /> 
-                    V REG: {{object.registration}} 
+                    On: {{object.date_requested}}
                 </li>
             </ul>
             <div class="card-body">

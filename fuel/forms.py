@@ -17,6 +17,7 @@ class FuelForm(forms.ModelForm):
         )
         widgets = {
           'reason': forms.Textarea(attrs={'rows':2, 'cols':15}),
+          'date_required': forms.DateInput(attrs={'class':'datepicker','type': 'date'}),
         }
 
     assessor = AutoCompleteSelectField('users', required=False, help_text=None)
@@ -34,7 +35,10 @@ class FuelReasignForm(forms.ModelForm):
         fields = ('registration', 'assessor', 'approver', 'plus_vehicle',)
         exclude = (
             'fuel_type', 'priority', 'origin', 'destination', 'date_required', 'amount', 'reason',
-        )
+        )        
+        widgets = {
+            'date_required': forms.DateInput(attrs={'class':'datepicker','type': 'date'}),
+        }
 
     assessor = AutoCompleteSelectField('users', required=False, help_text=None)
     approver = AutoCompleteSelectField('users', required=False, help_text=None)

@@ -23,3 +23,14 @@ def add_user_to_group(instance, sender, **kwargs):
         user.groups.add(group)
         
 m2m_changed.connect(add_user_to_group, sender=UserProfile.group.through)
+
+
+def user_status_update(instance, sender, **kwargs):
+	user = instance.user
+	if instance.active:
+		user.is_active = True
+	else:
+		user.is_active = False
+	user.save()
+
+post_save.connect(user_status_update, sender=UserProfile)

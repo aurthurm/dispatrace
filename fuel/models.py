@@ -107,7 +107,7 @@ class Fuel(models.Model):
     # )
     origin = models.CharField(
         _('origin'),
-        max_length=10
+        max_length=255
     )
     # destination = models.ForeignKey(
     #     'profiles.City',
@@ -117,7 +117,7 @@ class Fuel(models.Model):
     # )
     destination = models.CharField(
         _('destination'),
-        max_length=10
+        max_length=255
     )
     reference_number = models.CharField(
         _('reference number'),

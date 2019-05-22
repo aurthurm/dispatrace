@@ -90,30 +90,35 @@
                 <!--sidebar end-->
 
             {% endif %}
-            <!--main content start-->            
-            <section id="main-content">
 
-            	<section class="wrapper">
-                    {% if passord_force_reset %}               
-                        <li class="list-group-item list-group-item-danger mb-2">
-                            Please change your password now. <a data-toggle="modal" data-target="#ForcePasswordChangeModal">
-                                <span><b>CLICK HERE</b></span>
-                            </a>
-                        </li> 
-                    {% endif %}
-                                
-                    <ul class="messages list-group mb-2">
-                        {% for message in messages %}
-                            <li class="list-group-item list-group-item-info">{{ message }}</li> 
-                        {% endfor %} 
-                    </ul>
 
-                    {% block content %}
-                    {% endblock %}
+                <!--main content start-->            
+                <section id="main-content">
+
+                	<section class="wrapper">
+                        {% if passord_force_reset %}               
+                            <li class="list-group-item list-group-item-danger mb-2">
+                                Please change your password now. <a data-toggle="modal" data-target="#ForcePasswordChangeModal">
+                                    <span><b>CLICK HERE</b></span>
+                                </a>
+                            </li> 
+                        {% endif %}
+                                    
+                        <ul class="messages list-group mb-2">
+                            {% for message in messages %}
+                                <li class="list-group-item list-group-item-info">{{ message }}</li> 
+                            {% endfor %} 
+                        </ul>
+
+                        {% block content %}
+                        {% endblock %}
+                        
+                    </section>
+
                 </section>
+                <!--main content end-->
+    
 
-            </section>
-            <!--main content end-->
              <div class="footer">
                 <div class="wthree-copyright text-center">
                     <p>© 2018 Dispatrace. | Dispatch and Trace Memos | Developed by <a href="http://www.icotech.co.zw" target='_blank' class="text-danger">ICOTECH </a> i.p.w <span class="text-danger">e4X Systems</span> </p>
