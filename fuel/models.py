@@ -178,6 +178,16 @@ class Comment(AbstractComment):
         related_name='%(class)s_fuel', 
         on_delete=models.PROTECT
     )
+    comment = models.TextField(
+        _('comment'),
+        max_length=255,
+        default=''
+   )
+   user = models.ForeignKey(
+        User,
+        related_name='user',
+        on_delete=models.PROTECT
+   )
 
     class Meta:
         get_latest_by = ['timestamp']
