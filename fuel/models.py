@@ -182,12 +182,12 @@ class Comment(AbstractComment):
         _('comment'),
         max_length=255,
         default=''
-   )
-   user = models.ForeignKey(
+    )
+    user = models.ForeignKey(
         User,
         related_name='user',
         on_delete=models.PROTECT
-   )
+    )
 
     class Meta:
         get_latest_by = ['timestamp']
