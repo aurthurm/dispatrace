@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Sum, Q
@@ -114,6 +115,24 @@ def signup(request):
     else:
         registration_form = SignUpForm()
     return render(request, 'registration/register.html', {'registration_form': registration_form})
+
+
+@login_required
+def register(request):
+    '''
+    For registering new users
+    '''
+    if request.Method != 'POST':
+    # for displaying blank form
+        form = UserCreationForm()
+    else:
+        form = UserCreationForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect("")
+    context = {'form': form}
+    return render(request, 'registration/register.html', context)
+
 
 def dash_stats(request):
     """
@@ -264,5 +283,4 @@ class Reports(TemplateView):
             return render(self.request, '_reports/reports.html', context={
                     'cities': City.objects.all()
                 })
-
 
