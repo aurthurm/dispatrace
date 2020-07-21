@@ -6,7 +6,7 @@ import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SECRET_KEY = 'cd^p)6p15nokou5h+@w_=5n@=+@dq@_l*ke5*hxe_(u)^go=v4'
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['dispatrace.herokuapp.com']
 
 INSTALLED_APPS = [
